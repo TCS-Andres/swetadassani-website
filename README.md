@@ -2,27 +2,42 @@
 
 Contemporary devotional art. Sacred stories, contemporary expression.
 
-A design preview of the home page for Sweta Dassani (SwetaDassani.com), built by The Creative Strategist.
+A Next.js site for Sweta Dassani (SwetaDassani.com), built by The Creative Strategist. Four pages: Home, Work, About, and Inquire, in the Quiet Gallery design system.
 
 ## Status
 
-Early home-page preview. The paintings, work titles, links, and artist portrait are placeholders while final assets are collected. The structure, voice, and design system are real.
+Design preview. The paintings, work titles, links, and artist portrait are placeholders while final assets are collected. The structure, voice, and design system are real.
 
 ## Stack
 
-Static HTML, CSS, and a small amount of vanilla JavaScript. No build step. Open `index.html` in a browser, or serve the folder with any static server:
+- Next.js (App Router) with TypeScript
+- React Server Components, with `'use client'` only where interactivity is needed (nav, gallery lightbox, contact form)
+- `next/font` for self-hosted Cormorant Garamond and Jost
+- `next/image` for the artwork
+- Plain CSS design system in `app/globals.css`, no CSS framework
+
+## Run it
 
 ```bash
-python3 -m http.server 8000
+npm install
+npm run dev
 ```
+
+Then open http://localhost:3000. Build for production with `npm run build`.
 
 ## Structure
 
-- `index.html`: home page
-- `assets/css/style.css`: design system and layout
-- `assets/js/main.js`: sticky nav and scroll reveals
-- `assets/fonts/`: Cormorant Garamond and Jost, Latin subsets, self hosted
-- `assets/art/`: placeholder paintings
+- `app/` : routes (`page.tsx` home, `portfolio/`, `about/`, `contact/`), `layout.tsx`, `globals.css`, `fonts.ts`
+- `components/` : `Nav`, `Footer`, `ScrollReveal`, `GalleryClient` (filter + lightbox), `ContactForm`
+- `content/works.ts` : the collection data. This is the file Sweta edits to manage the gallery
+- `public/art/` : placeholder paintings
+- `app/fonts/` : self-hosted font files
+
+## Adding a painting
+
+1. Drop a photo in `public/art/` (name it, for example, `new-piece.jpg`)
+2. Add a row to `content/works.ts` with the slug, title, subject, year, size, and a short story
+3. Commit and push. Vercel redeploys automatically.
 
 ## Design system
 
@@ -33,10 +48,10 @@ python3 -m http.server 8000
 
 ## Before launch
 
-- Replace placeholder paintings with web-ready photos of the 25 works
+- Replace placeholder paintings with web-ready photos of the real works
 - Add real titles, years, sizes, and a short story per piece
 - Add a photo of Sweta, and the real Instagram and email links
-- Build the Portfolio, About, and Contact pages
+- Wire the contact form to a real endpoint (currently opens the visitor's email app)
 - Drop in Sweta's brand color
 
 ---
