@@ -1,254 +1,788 @@
-/* ================= Sweta Dassani | Quiet Gallery design system ================= */
-/* Fonts are loaded via next/font (see app/fonts.ts) and exposed as
-   --font-serif and --font-sans on the html element. */
+@import "tailwindcss";
+
+/* ============ Sweta Dassani — her own palette =========================
+   The four colours are Sweta's, pulled from her paintings: Periwinkle,
+   Iris, Saffron, Lotus Pink. Around them sits the guide's quiet chassis
+   (Pearl ground, Violet Ink type) so the brights stay bright and the
+   artwork is still the loudest thing on every page.
+
+   The contrast rules are the guide's, not preference:
+     - Saffron and Lotus Pink are DECORATIVE on light grounds. Never type.
+       (1.5:1 and 2.7:1 — they fail as text.)
+     - Saffron becomes type only on Violet Ink, where it reads 9.6:1. That
+       pairing is reserved for the one dark band and the full-bleed plate.
+     - Iris Deep is the text-level accent: labels, kickers, links.
+     - Iris is the workhorse for drawn lines: rules, dividers, numerals.
+   Roughly 60% Pearl and White, 25% ink, 15% the four colours.
+====================================================================== */
 
 :root{
-  --canvas:#F5F3EE;      /* limestone plaster wall */
-  --paper:#FFFFFF;       /* lifted paper for labels */
-  --ink:#1A1613;         /* warm near-black */
-  --ink-soft:#3A342D;
-  --muted:#776F64;       /* warm taupe, biased toward brass */
-  --line:#E4DED3;        /* warm hairline */
-  --brass:#A67C3D;       /* gold-leaf accent, used sparingly */
-  --brass-deep:#8A6630;
-  --night:#17130F;       /* the one dark band */
-  --night-text:#EDE7DB;
+  --canvas:#F7F8FC;      /* Pearl — the everyday ground */
+  --wash:#E0E8F5;        /* Periwinkle, let down — a tint, not a slab */
+  --wash-soft:#F1F4FB;   /* barely there, for the largest areas */
+  --paper:#FFFFFF;       /* mats and cards, so art never sits on a tint */
+  --ink:#262038;         /* Violet Ink — all type, and the dark surface */
+  --ink-soft:#3E3660;
+  --muted:#5C587A;       /* Slate — captions and metadata */
+  --line:#DCE0EC;        /* Mist — hairlines */
+  --iris:#8878C3;        /* the workhorse: rules, dividers, numerals */
+  --iris-deep:#584A99;   /* type-level accent, and the closing band */
+  --saffron:#FDC133;     /* the devotional gold. Decorative on light */
+  --lotus:#F955D2;       /* the joy note. Tags and celebrations only */
+  /* Lotus Pink lifted for dark grounds. The true swatch measures 2.54:1 on
+     Iris Deep, under the 3.0 a large word needs; this reads 4.10:1 and is
+     still plainly her pink. Only for type on the dark band — decorative
+     pink stays #F955D2. */
+  --lotus-light:#FCA6E4;
+  --night:#262038;       /* the single dark band, before the footer */
+  --night-text:#F7F8FC;
 
-  --serif:var(--font-serif), Georgia, "Times New Roman", serif;
-  --sans:var(--font-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --serif:var(--font-cormorant), Georgia, "Times New Roman", serif;
+  --sans:var(--font-jost), "Century Gothic", "Avenir Next", sans-serif;
 
-  --measure:62ch;
-  --pad-x:clamp(1.25rem, 5vw, 5rem);
-  --sec-y:clamp(4.5rem, 11vh, 9rem);
-  --maxw:1240px;
+  --measure:60ch;
+  --pad-x:clamp(1.25rem, 5vw, 6rem);
+  --sec-y:clamp(3.5rem, 8vh, 6.5rem);
+  --maxw:1280px;
+  --ease:cubic-bezier(.16,.7,.2,1);
 }
 
 *{box-sizing:border-box;}
 html{-webkit-text-size-adjust:100%;}
-body{margin:0;}
+body{margin:0;background:var(--canvas);}
 img{display:block;max-width:100%;}
 a{color:inherit;text-decoration:none;}
 button{font-family:inherit;}
+::selection{background:var(--iris);color:var(--ink);}
 
 .page{
+  position:relative;
   background:var(--canvas);
   color:var(--ink);
   font-family:var(--sans);
   font-weight:300;
-  font-size:clamp(1rem,0.96rem + 0.2vw,1.075rem);
-  line-height:1.75;
-  letter-spacing:0.005em;
+  font-size:clamp(0.95rem,0.92rem + 0.14vw,1.02rem);
+  line-height:1.8;
   -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
+  overflow-x:clip;
 }
 
-/* ==== SHARED TYPE ==== */
-.label{font-family:var(--sans);font-weight:500;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.26em;color:var(--brass-deep);}
-.display{font-family:var(--serif);font-weight:500;line-height:1.02;letter-spacing:-0.01em;text-wrap:balance;margin:0;}
-h2.section-title{font-family:var(--serif);font-weight:500;font-size:clamp(2rem,1.4rem + 2.6vw,3.15rem);line-height:1.05;letter-spacing:-0.01em;margin:0;text-wrap:balance;}
-p{margin:0 0 1.1rem;max-width:var(--measure);}
+/* A breath of paper tooth over the whole page. Without it the flat limestone
+   reads as a screen colour; with it, as a surface. */
+.page::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  opacity:.4;
+  mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.055'/%3E%3C/svg%3E");
+}
+.page > *{position:relative;z-index:2;}
+
+/* ==== TYPE ====
+   The scale is the fix for "it feels disorganised": four sizes, one serif,
+   one sans, and nothing in between. */
+.label{
+  font-family:var(--sans);font-weight:500;font-size:0.68rem;
+  text-transform:uppercase;letter-spacing:0.3em;color:var(--iris-deep);
+}
+.display{
+  font-family:var(--serif);font-weight:500;line-height:0.98;
+  letter-spacing:-0.022em;text-wrap:balance;margin:0;
+}
+h2.section-title{
+  font-family:var(--serif);font-weight:500;
+  font-size:clamp(1.8rem,1.2rem + 1.6vw,2.6rem);
+  line-height:1.0;letter-spacing:-0.022em;margin:0;text-wrap:balance;
+}
+p{margin:0 0 1.2rem;max-width:var(--measure);}
 .container{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad-x);}
+em{font-style:italic;}
+
+/* The designer's brushstroke, recoloured to the logo gold. Set as a mask so
+   it takes its colour from the token and can never drift out of palette. */
+.brushwave{
+  display:block;width:min(19rem,58%);height:1.05rem;margin-top:1.1rem;
+  background:var(--iris);
+  -webkit-mask:url("/brand/brushwave-gold.png") left center/contain no-repeat;
+  mask:url("/brand/brushwave-gold.png") left center/contain no-repeat;
+}
+.brushwave.center{margin-inline:auto;}
+
+/* The lotus rule, between major movements of the page. */
+.lotus-rule{
+  position:relative;
+  width:min(30rem,80%);height:2.6rem;margin:0 auto;
+  /* Saffron reads at 1.5:1 on Pearl — invisible. It only earns its place on
+     a tinted or dark ground, which is why the divider lives on the band. */
+  background:var(--saffron);
+  -webkit-mask:url("/brand/divider-lotus-gold.png") center/contain no-repeat;
+  mask:url("/brand/divider-lotus-gold.png") center/contain no-repeat;
+  opacity:.85;
+}
+/* Lotus Pink where it belongs: the lotus itself. The standalone motif and the
+   lotus inside the divider are the same drawing at the same scale (208x173
+   against 1528x174), so sizing this to the rule's height lands it exactly on
+   top of the gold one — no nudging, and it stays aligned at any width. */
+.lotus-rule::after{
+  content:"";position:absolute;top:0;left:50%;translate:-50% 0;
+  height:100%;aspect-ratio:208/173;
+  background:var(--lotus);
+  -webkit-mask:url("/brand/motif-lotus.png") center/contain no-repeat;
+  mask:url("/brand/motif-lotus.png") center/contain no-repeat;
+}
+
+/* Her petal motif, as a whisper behind a section. Never above 6% or it starts
+   competing with the paintings. */
+.petal-wash{position:relative;isolation:isolate;}
+.petal-wash::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  opacity:.075;
+  background:var(--iris);
+  -webkit-mask:url("/brand/petal-pattern-gold.png") 0 0/320px 320px repeat;
+  mask:url("/brand/petal-pattern-gold.png") 0 0/320px 320px repeat;
+}
+
+/* Oversized editorial numeral, used to letter the sections. */
+.folio{
+  font-family:var(--serif);font-weight:500;font-style:italic;
+  font-size:clamp(2rem,1.5rem + 2.2vw,3.4rem);line-height:.8;
+  color:var(--iris);opacity:.45;letter-spacing:-0.03em;
+  user-select:none;
+}
 
 /* ==== NAV ==== */
-.nav{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:1.15rem var(--pad-x);transition:background .5s ease, box-shadow .5s ease, padding .5s ease;}
-.nav.scrolled{background:color-mix(in srgb, var(--canvas) 88%, transparent);backdrop-filter:saturate(120%) blur(10px);box-shadow:0 1px 0 var(--line);padding-top:.8rem;padding-bottom:.8rem;}
-.wordmark{font-family:var(--sans);font-weight:400;font-size:1.28rem;letter-spacing:0.02em;color:var(--ink);}
-.wordmark .dot{color:var(--brass);}
-.nav-right{display:flex;align-items:center;gap:clamp(1.1rem,2.4vw,2.4rem);}
+.nav{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:1.35rem var(--pad-x);transition:background .4s ease, box-shadow .4s ease, padding .4s ease;}
+.nav.scrolled{background:color-mix(in srgb, var(--canvas) 92%, transparent);backdrop-filter:saturate(120%) blur(10px);box-shadow:0 1px 0 var(--line);padding-top:.85rem;padding-bottom:.85rem;}
+.brandlock{display:flex;align-items:center;gap:.75rem;}
+/* 1005x744, not square; 36px clears the guide's 32px minimum for the mark. */
+.brandlock img{height:36px;width:auto;}
+.wordmark{font-family:var(--serif);font-weight:500;font-size:1.4rem;letter-spacing:0.035em;color:var(--ink);line-height:1;}
+.wordmark .dot{color:var(--lotus);}
+.nav-right{display:flex;align-items:center;gap:clamp(1.1rem,2.6vw,2.6rem);}
 .nav-links{display:flex;gap:clamp(1.1rem,2.4vw,2.2rem);}
-.nav-links a{font-size:0.82rem;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-soft);position:relative;padding-bottom:2px;}
-.nav-links a::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1px;background:var(--brass);transition:right .35s ease;}
+.nav-links a{font-size:0.74rem;font-weight:400;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-soft);position:relative;padding-bottom:3px;}
+.nav-links a::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1px;background:var(--saffron);transition:right .3s var(--ease);}
 .nav-links a:hover::after,.nav-links a.active::after{right:0;}
 .nav-links a.active{color:var(--ink);}
-.btn{display:inline-flex;align-items:center;gap:.55rem;font-family:var(--sans);font-weight:400;font-size:0.8rem;letter-spacing:0.14em;text-transform:uppercase;padding:.72rem 1.35rem;border:1px solid var(--ink);background:var(--ink);color:var(--canvas);transition:background .3s ease, color .3s ease;cursor:pointer;}
-.btn:hover{background:transparent;color:var(--ink);}
 
-/* ==== HERO ==== */
-.hero{padding-top:clamp(7rem,16vh,11rem);padding-bottom:var(--sec-y);}
-.hero-grid{display:grid;grid-template-columns:1.05fr 0.9fr;gap:clamp(2rem,5vw,5rem);align-items:center;}
-.hero-eyebrow{display:flex;align-items:center;gap:.85rem;margin-bottom:1.7rem;}
-.hero-eyebrow .rule{height:1px;width:2.6rem;background:var(--brass);}
-.hero h1{font-size:clamp(2.9rem,1.7rem + 5vw,5.4rem);}
-.hero h1 em{font-style:italic;color:var(--ink);}
-.hero-sub{margin-top:1.9rem;color:var(--ink-soft);font-weight:300;font-size:clamp(1.05rem,1rem + 0.3vw,1.22rem);line-height:1.7;max-width:38ch;}
-.hero-actions{display:flex;align-items:center;gap:1.5rem;margin-top:2.4rem;flex-wrap:wrap;}
-.textlink{display:inline-flex;align-items:center;gap:.5rem;font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink);}
-.textlink .arw{transition:transform .3s ease;color:var(--brass);}
-.textlink:hover .arw{transform:translateX(5px);}
-.hero-meta{margin-top:3.2rem;display:flex;gap:2.2rem;flex-wrap:wrap;font-size:0.8rem;letter-spacing:0.05em;color:var(--muted);}
-.hero-meta span b{font-weight:500;color:var(--ink-soft);font-variant-numeric:tabular-nums;}
-.hero-figure{position:relative;}
-.artframe{position:relative;overflow:hidden;background:var(--paper);box-shadow:0 34px 70px -40px rgba(26,22,19,.55), 0 2px 0 var(--line);}
-.hero-figure .artframe{aspect-ratio:4/5;}
-.artframe img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s cubic-bezier(.16,.7,.2,1);}
-.artframe:hover img{transform:scale(1.035);}
-.hero-figure .plate{position:absolute;left:1.4rem;bottom:1.4rem;background:color-mix(in srgb, var(--paper) 92%, transparent);backdrop-filter:blur(4px);padding:.85rem 1.05rem;max-width:70%;border-left:2px solid var(--brass);}
-.wl-title{font-family:var(--serif);font-style:italic;font-weight:500;font-size:1.28rem;line-height:1.1;color:var(--ink);}
-.wl-meta{margin-top:.3rem;font-size:0.73rem;letter-spacing:0.04em;color:var(--muted);font-variant-numeric:tabular-nums;}
+.btn{display:inline-flex;align-items:center;gap:.6rem;font-family:var(--sans);font-weight:500;font-size:0.76rem;letter-spacing:0.16em;text-transform:uppercase;padding:.95rem 1.8rem;border:1px solid var(--ink);background:var(--ink);color:var(--canvas);border-radius:0;transition:background .25s ease,color .25s ease,border-color .25s ease;cursor:pointer;}
+.btn:hover{background:transparent;color:var(--ink);}
+.btn:focus-visible{outline:2px solid var(--iris-deep);outline-offset:3px;}
+.btn-ghost{background:transparent;color:var(--ink);border-color:color-mix(in srgb, var(--ink) 35%, transparent);}
+.btn-ghost:hover{background:var(--ink);color:var(--canvas);border-color:var(--ink);}
+
+/* ==== MOBILE MENU ==== */
+.nav-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;width:2.4rem;height:2.4rem;padding:0 .35rem;background:transparent;border:0;cursor:pointer;}
+.nav-toggle span{display:block;height:1px;width:100%;background:var(--ink);transition:transform .25s var(--ease);}
+.nav.open .nav-toggle span:first-child{transform:translateY(3px) rotate(45deg);}
+.nav.open .nav-toggle span:last-child{transform:translateY(-3px) rotate(-45deg);}
+.nav-toggle:focus-visible{outline:2px solid var(--iris-deep);outline-offset:2px;}
+.nav-panel{display:none;}
+
+/* ==== HERO / THE CORRIDOR ====
+   Light now, not a dark band: limestone ground so the page opens in the same
+   colour as the logo, and the paintings supply every bit of the colour. */
+/* min-height, not height: on a short window the column is taller than 80vh,
+   and a fixed height pushed the scroll cue out of the hero and into the
+   band below it. */
+.corridor{position:relative;width:100%;min-height:min(80vh,660px);background:var(--canvas);isolation:isolate;}
+/* The top padding clears the fixed nav. Without it the centred headline rides
+   up under the wordmark on short or narrow viewports. */
+.corridor-overlay{position:relative;z-index:10;min-height:min(80vh,660px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:clamp(4.5rem,11vh,6.5rem) clamp(1.25rem,5vw,4rem) clamp(1.75rem,5vh,3.25rem);}
+/* Limestone veil so the type sits clear of the stream without dimming the art
+   at the edges. */
+.corridor-overlay::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  /* Solid clear through the headline's full width — the type is wider than
+     it looks, and a narrower core let cards drift under the ends of the
+     italic line. It then falls away fast, so the paintings out on the rails
+     keep their full saturation. A broad, even veil would mute her colour,
+     which is the one thing that must not happen. */
+  background:radial-gradient(64% 44% at 50% 47%,
+    var(--canvas) 0%,
+    var(--canvas) 30%,
+    color-mix(in srgb, var(--canvas) 86%, transparent) 48%,
+    color-mix(in srgb, var(--canvas) 34%, transparent) 68%,
+    transparent 84%);
+}
+.corridor .kicker{font-family:var(--sans);font-weight:500;font-size:0.68rem;letter-spacing:0.34em;text-transform:uppercase;color:var(--iris-deep);margin-bottom:1.8rem;}
+.corridor h1{font-family:var(--serif);font-weight:500;font-size:clamp(2.1rem,1.5rem + 3vw,4.2rem);line-height:0.96;letter-spacing:-0.028em;color:var(--ink);margin:0;text-wrap:balance;}
+.corridor h1 em{font-style:italic;color:var(--iris-deep);}
+.corridor .sub{margin:2rem auto 0;max-width:40ch;color:var(--ink-soft);font-size:clamp(0.98rem,0.94rem + 0.16vw,1.08rem);line-height:1.7;}
+.corridor .acts{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:2.6rem;}
+/* In the flow, not pinned to the bottom. Absolutely positioned it sat at a
+   fixed offset while the centred column above grew downward into it — on a
+   700px-tall window the cue crossed the buttons by 37px. */
+.corridor-scroll{margin-top:clamp(1.4rem,3.5vh,2.6rem);z-index:11;font-size:0.62rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:.7rem;}
+.corridor-scroll::after{content:"";width:1px;height:2.6rem;background:linear-gradient(var(--saffron),transparent);}
 
 /* ==== STATEMENT ==== */
-.statement{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-block:clamp(3rem,7vh,5.5rem);}
-.statement p{font-family:var(--serif);font-weight:500;font-style:italic;font-size:clamp(1.5rem,1.1rem + 2vw,2.5rem);line-height:1.32;color:var(--ink);max-width:24ch;margin:0;text-wrap:balance;}
-.statement .container{display:grid;grid-template-columns:auto 1fr;gap:clamp(1.5rem,4vw,4rem);align-items:start;}
-.statement .who{align-self:end;max-width:34ch;color:var(--muted);font-size:0.95rem;font-weight:300;line-height:1.7;}
+.statement{background:var(--wash);padding-block:clamp(3rem,7vh,5rem);text-align:center;}
+.statement .container{display:flex;flex-direction:column;align-items:center;gap:1.6rem;}
+.statement p{font-family:var(--serif);font-weight:500;font-style:italic;font-size:clamp(1.5rem,1.1rem + 1.6vw,2.4rem);line-height:1.18;letter-spacing:-0.018em;color:var(--ink);max-width:20ch;margin:0;text-wrap:balance;}
+.statement .who{max-width:46ch;color:var(--muted);font-size:1rem;font-weight:300;line-height:1.8;font-style:normal;font-family:var(--sans);}
+
+/* ==== SECTION HEADS ==== */
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:2.5rem;flex-wrap:wrap;margin-bottom:clamp(3rem,6vh,4.5rem);}
+.sec-head .left{display:flex;gap:clamp(1rem,3vw,2.5rem);align-items:flex-start;}
+.sec-head .label{display:block;margin-bottom:1rem;}
+.sec-head .sub{color:var(--muted);font-size:0.92rem;max-width:26ch;}
 
 /* ==== WORKS ==== */
 .works{padding-block:var(--sec-y);}
-.works-head{display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;margin-bottom:clamp(2.4rem,5vh,3.6rem);flex-wrap:wrap;}
-.works-head .label{margin-bottom:.9rem;}
-.works-head .sub{color:var(--muted);font-size:0.9rem;letter-spacing:0.03em;}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1.6rem,3.2vw,3rem) clamp(1.4rem,2.6vw,2.4rem);}
-.work .tile{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--paper);box-shadow:0 24px 50px -38px rgba(26,22,19,.5);width:100%;display:block;padding:0;border:0;}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(2.5rem,4vw,4rem) clamp(1.5rem,2.8vw,2.6rem);}
+.work .tile{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--paper);width:100%;display:block;padding:0;border:0;box-shadow:0 1px 0 var(--line);}
 .work button.tile{cursor:zoom-in;}
-.work button.tile:focus-visible{outline:2px solid var(--brass);outline-offset:3px;}
-.work .tile img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s cubic-bezier(.16,.7,.2,1);}
-.work:hover .tile img{transform:scale(1.05);}
-.work .cap{display:flex;gap:.9rem;padding-top:1rem;}
-.work .num{font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--brass);line-height:1.2;min-width:1.7rem;padding-top:.15rem;}
+.work button.tile:focus-visible{outline:2px solid var(--iris-deep);outline-offset:4px;}
+.work .tile img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease);}
+.work:hover .tile img{transform:scale(1.03);}
+.work .cap{display:flex;gap:1rem;padding-top:1.2rem;}
+.work .num{font-family:var(--serif);font-style:italic;font-size:1.15rem;color:var(--iris);line-height:1.1;min-width:1.9rem;padding-top:.1rem;}
 .work .cap .body{flex:1;}
-.work .price{margin-top:.55rem;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-soft);display:inline-flex;align-items:center;gap:.5rem;}
-.work .price::before{content:"";width:.42rem;height:.42rem;border:1px solid var(--brass);border-radius:50%;display:inline-block;}
-.works-foot{margin-top:clamp(2.6rem,5vh,3.6rem);border-top:1px solid var(--line);padding-top:1.6rem;display:flex;justify-content:flex-end;}
+.wl-title{font-family:var(--serif);font-weight:600;font-size:1.45rem;line-height:1.15;letter-spacing:-0.012em;color:var(--ink);}
+.wl-meta{margin-top:.4rem;font-size:0.78rem;letter-spacing:0.06em;color:var(--muted);font-variant-numeric:tabular-nums;text-transform:uppercase;}
 
-/* view-all tile on home */
-.work .tile.view-all-tile{display:flex;align-items:center;justify-content:center;background:var(--canvas);border:1px solid var(--line);box-shadow:none;text-align:center;transition:border-color .3s ease;}
-.work .tile.view-all-tile:hover{border-color:var(--ink);}
-.view-all-tile span{font-family:var(--serif);font-style:italic;font-size:1.5rem;color:var(--ink);line-height:1.3;}
-.view-all-tile .arw{color:var(--brass);font-size:1.1rem;}
+.price{margin-top:.7rem;font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--iris-deep);display:inline-flex;align-items:center;gap:.55rem;transition:color .25s ease;}
+.price::before{content:"";width:1.4rem;height:1px;background:var(--saffron);display:inline-block;flex:none;transition:width .3s var(--ease);}
+a.price:hover{color:var(--ink);}
+a.price:hover::before{width:2.2rem;}
+
+.works-foot{margin-top:clamp(3rem,6vh,4.5rem);display:flex;justify-content:center;}
+.tag-new{position:absolute;top:1rem;left:1rem;z-index:5;background:var(--lotus);color:var(--night);font-family:var(--sans);font-weight:500;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;padding:.4rem .7rem;}
+
+.textlink{display:inline-flex;align-items:center;gap:.6rem;font-size:0.74rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);border-bottom:1px solid var(--iris);padding-bottom:.35rem;transition:color .25s ease,border-color .25s ease;}
+.textlink:hover{color:var(--ink);border-color:var(--ink);}
+.textlink .arw{transition:transform .3s var(--ease);color:var(--iris-deep);}
+.textlink:hover .arw{transform:translateX(6px);}
+
+/* ==== THE POP-UP CARDS ====
+   The effect the client actually wanted: her paintings lifted off the page.
+   The frame tilts to the pointer and the canvas floats on a plane in front of
+   it, so parallax opens between them. Transform-only, so it stays on the
+   compositor; a no-op on touch and under reduced motion. */
+.popgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(2rem,3.5vw,3.5rem);}
+/* Editorial rhythm: the middle card rides lower than its neighbours so the
+   row reads as a hang, not a spreadsheet. */
+.popgrid > *:nth-child(2){margin-top:clamp(1.5rem,4vw,4rem);}
+.popgrid > *:nth-child(3){margin-top:clamp(.5rem,1.5vw,1.5rem);}
+.popcard{perspective:1200px;}
+.popcard-inner{position:relative;transform-style:preserve-3d;transition:transform .5s var(--ease);will-change:transform;}
+.popcard-plate{position:relative;aspect-ratio:4/5;background:var(--paper);transform-style:preserve-3d;box-shadow:0 2px 0 var(--line);}
+.popcard-art{position:absolute;inset:6%;overflow:hidden;transform:translateZ(46px);box-shadow:0 26px 50px -30px rgba(38,32,56,.6);}
+.popcard-art img{width:100%;height:100%;object-fit:cover;}
+.popcard-sheen{position:absolute;inset:0;pointer-events:none;transform:translateZ(60px);background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.5) 50%,transparent 60%);opacity:0;transition:opacity .35s ease;}
+.popcard:hover .popcard-sheen{opacity:.55;}
+.popcard-seat{position:absolute;left:9%;right:9%;bottom:-16px;height:26px;border-radius:50%;background:rgba(38,32,56,.22);filter:blur(13px);transform:translateZ(-50px);opacity:0;transition:opacity .5s var(--ease);}
+.popcard:hover .popcard-seat{opacity:1;}
+.popcard-label{transform:translateZ(70px);padding-top:1.4rem;}
+.popcard-energy{display:inline-flex;align-items:center;gap:.6rem;font-size:0.62rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--iris-deep);margin-bottom:.7rem;}
+.popcard-energy::before{content:"";width:1.6rem;height:1px;background:var(--saffron);}
+
+/* ==== THE WIDE PLATE ====
+   One painting, full width, with the title set over it. Replaces the galaxy:
+   the drama now comes from her own work at scale. */
+/* ==== THE GALLERY AT NIGHT ====
+   Iris Deep, not the near-black. It is Iris darkened until type sits on it,
+   so it belongs to her four rather than reading as a generic dark slab.
+   Pearl measures 7.0:1 on it and Saffron 4.5:1, which is what lets the gold
+   italic stay. Plain Iris would look bolder and cannot carry the copy —
+   Saffron on it is 2.4:1, and it fails as text. The
+   paintings are shown whole and tilted as a pair; the previous version
+   cropped a single canvas to a 700px band, which threw away most of the
+   composition and read as a zoomed-in background rather than as work. */
+.plate-wide{background:var(--iris-deep);color:var(--night-text);padding-block:clamp(4rem,9vh,7rem);overflow:clip;}
+.plate-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(2rem,5vw,5rem);align-items:center;}
+.plate-wide .copy .label{color:var(--saffron);}
+.plate-wide .copy h2{font-family:var(--serif);font-weight:500;font-size:clamp(1.7rem,1.2rem + 1.8vw,2.8rem);line-height:1.0;letter-spacing:-0.025em;color:var(--night-text);margin:.9rem 0 0;text-wrap:balance;}
+/* Her exact swatch, at her request. It measures 2.54:1 on Iris Deep, so it
+   is the one place on the site where a word sits under the readable
+   threshold — kept because it is a two-word display accent beside a heading
+   in Pearl, not copy anyone has to read. */
+.plate-wide .copy h2 em{font-style:italic;color:var(--lotus);}
+.plate-wide .copy .brushwave{background:var(--saffron);opacity:.85;}
+.plate-wide .copy p{color:color-mix(in srgb, var(--night-text) 80%, transparent);margin-top:1.2rem;max-width:36ch;}
+.plate-wide .copy .textlink{color:var(--night-text);border-color:var(--saffron);margin-top:1.4rem;}
+.plate-wide .copy .textlink:hover{color:var(--saffron);border-color:var(--night-text);}
+
+/* The pair. A shared perspective so both plates lean into the same room. */
+.plates{position:relative;perspective:1500px;padding-block:clamp(1rem,3vw,2.5rem);}
+.plates .p{margin:0;background:var(--paper);padding:11px;transform-style:preserve-3d;}
+.plates .p img{display:block;width:100%;height:auto;}
+/* --tx / --ty come from the pointer, 0 at rest. The near plate takes more
+   of the swing than the far one; that difference is the parallax. */
+.plates{--tx:0;--ty:0;}
+.plates .p{transition:transform .35s var(--ease);}
+.plates:hover .p{transition:transform .12s linear;}
+.plates .front{
+  position:relative;z-index:2;width:min(78%,360px);
+  transform:rotateY(calc(-11deg + var(--tx) * 16deg))
+            rotateX(calc(var(--ty) * -11deg))
+            rotateZ(-1.4deg)
+            translate3d(calc(var(--tx) * 14px), calc(var(--ty) * 10px), 40px);
+  box-shadow:0 46px 70px -40px rgba(0,0,0,.85);
+}
+.plates .back{
+  position:absolute;z-index:1;right:0;top:0;width:min(52%,238px);
+  transform:rotateY(calc(-11deg + var(--tx) * 8deg))
+            rotateX(calc(var(--ty) * -5deg))
+            rotateZ(2.6deg)
+            translate3d(calc(var(--tx) * -18px), calc(var(--ty) * -6px), 0);
+  box-shadow:0 34px 56px -38px rgba(0,0,0,.8);
+}
+.plates .front figcaption{
+  padding-top:.7rem;font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--muted);text-align:center;
+}
+
+@media (max-width:900px){
+  .plate-grid{grid-template-columns:1fr;gap:2.5rem;}
+  .plates{max-width:26rem;}
+  .plates .front{width:min(82%,320px);}
+  .plates .back{width:min(50%,190px);}
+}
 
 /* ==== ENERGIES ==== */
-.energy{background:var(--paper);border-block:1px solid var(--line);padding-block:var(--sec-y);}
-.energy-intro{max-width:46ch;margin-bottom:clamp(2.4rem,5vh,3.4rem);}
-.energy-intro h2{margin-bottom:1.1rem;}
+.energy{background:var(--wash-soft);padding-block:var(--sec-y);}
+.energy-intro{max-width:42ch;margin-bottom:clamp(3rem,6vh,4.5rem);}
+.energy-intro h2{margin-bottom:1.2rem;}
 .energy-intro p{color:var(--muted);margin:0;}
-.triad{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line);}
-.deity{padding:2.2rem clamp(1.2rem,2.4vw,2.4rem) 2.2rem 0;border-right:1px solid var(--line);}
-.deity:last-child{border-right:0;}
-.deity .name{font-family:var(--serif);font-size:1.9rem;font-weight:500;color:var(--ink);margin-bottom:.9rem;}
-.deity .traits{display:flex;flex-direction:column;gap:.5rem;}
-.deity .traits span{font-size:0.85rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.6rem;}
-.deity .traits span::before{content:"";width:1.1rem;height:1px;background:var(--brass);}
+.triad{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(2rem,4vw,4rem);}
+.deity{padding-top:1.8rem;border-top:1px solid var(--iris);}
+.deity:nth-child(2){border-top-color:var(--lotus);}
+.deity:nth-child(3){border-top-color:var(--saffron);}
+.deity .name{font-family:var(--serif);font-size:clamp(1.4rem,1.15rem + 0.8vw,1.9rem);font-weight:500;color:var(--ink);margin-bottom:1.1rem;line-height:1;}
+.deity .traits{display:flex;flex-direction:column;gap:.6rem;}
+.deity .traits span{font-size:0.78rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);}
 
-/* ==== ABOUT ==== */
-.about{padding-block:var(--sec-y);}
-.about-grid{display:grid;grid-template-columns:1fr 0.82fr;gap:clamp(2rem,5vw,5rem);align-items:center;}
-.about .label{margin-bottom:1.4rem;}
-.about blockquote{margin:0;font-family:var(--serif);font-weight:500;font-size:clamp(1.5rem,1.1rem + 1.8vw,2.3rem);line-height:1.34;color:var(--ink);text-wrap:balance;}
-.about .sig{margin-top:1.6rem;font-family:var(--serif);font-style:italic;font-size:1.5rem;color:var(--brass-deep);}
-.about .more{margin-top:2rem;}
-.portrait{aspect-ratio:4/5;background:linear-gradient(150deg,#ECE6DA,#E0D8C9 60%,#D8CFBD);display:flex;align-items:flex-end;padding:1.3rem;position:relative;overflow:hidden;box-shadow:0 24px 50px -38px rgba(26,22,19,.5);}
-.portrait::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 30% 20%, rgba(255,255,255,.5), transparent 60%);}
-.portrait .ph{position:relative;font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:#8a7f6b;}
+/* ==== THE ARTIST ====
+   Was the blandest part of the page. Now: a tall portrait that overlaps a
+   sand panel, an oversized quote, and her signature. */
+.artist{padding-block:var(--sec-y);}
+.artist-grid{display:grid;grid-template-columns:0.85fr 1.15fr;gap:clamp(2rem,6vw,6rem);align-items:center;}
+.artist-figure{position:relative;}
+.artist-figure .shot{position:relative;z-index:2;aspect-ratio:4/5;overflow:hidden;background:var(--paper);}
+.artist-figure .shot img{width:100%;height:100%;object-fit:cover;}
+/* A sand block sitting behind and offset, so the portrait is composed rather
+   than pasted. */
+.artist-figure::before{content:"";position:absolute;z-index:1;left:-1.6rem;bottom:-1.6rem;width:72%;height:62%;background:var(--wash);}
+/* The delivered mark PNG is the warm-gold generation, which clashes on a
+   Pearl and Periwinkle page. Drawn as a mask instead, it takes the Iris
+   token — the guide's mark colour on light grounds — and can never drift.
+   Replace with a real Iris export when the designer supplies one. */
+.artist-figure .stamp{
+  position:absolute;z-index:3;right:-1.1rem;top:-1.1rem;
+  width:clamp(4.5rem,8vw,6.5rem);aspect-ratio:1005/744;opacity:.75;
+  background:var(--iris);
+  -webkit-mask:url("/logo/SwetaDassani_Mark_Gold.png") center/contain no-repeat;
+  mask:url("/logo/SwetaDassani_Mark_Gold.png") center/contain no-repeat;
+}
+.artist-copy .label{margin-bottom:1.4rem;}
+.artist-copy blockquote{margin:0;font-family:var(--serif);font-weight:500;font-size:clamp(1.35rem,1.1rem + 1.2vw,2.1rem);line-height:1.16;letter-spacing:-0.02em;color:var(--ink);text-wrap:balance;}
+.artist-copy .body{margin-top:1.8rem;color:var(--ink-soft);max-width:44ch;}
+.artist-copy .sig{margin-top:2rem;font-family:var(--serif);font-style:italic;font-weight:500;font-size:2.1rem;color:var(--iris-deep);line-height:1;}
+.artist-copy .more{margin-top:2.2rem;}
 
-/* ==== NIGHT CTA BAND ==== */
-.cta-band{background:var(--night);color:var(--night-text);padding-block:clamp(4.5rem,10vh,7.5rem);}
-.cta-band .inner{display:flex;flex-direction:column;align-items:flex-start;gap:1.8rem;}
-.cta-band h2{font-family:var(--serif);font-weight:500;font-size:clamp(2.2rem,1.4rem + 3.4vw,4rem);line-height:1.06;margin:0;color:var(--night-text);text-wrap:balance;max-width:16ch;}
-.cta-band p{color:color-mix(in srgb, var(--night-text) 72%, transparent);margin:0;max-width:44ch;}
-.cta-band .btn{background:var(--brass);border-color:var(--brass);color:var(--night);}
+/* ==== DARK BAND ==== */
+.cta-band{background:var(--iris-deep);color:var(--night-text);padding-block:clamp(3.2rem,7.5vh,5.5rem);text-align:center;}
+.cta-band .inner{display:flex;flex-direction:column;align-items:center;gap:1.5rem;}
+.cta-band .mark{height:60px;width:auto;margin-bottom:.6rem;}
+.cta-band .label{color:var(--saffron);}
+.cta-band h2{font-family:var(--serif);font-weight:500;font-size:clamp(1.7rem,1.2rem + 1.8vw,2.8rem);line-height:1.02;margin:0;color:var(--night-text);text-wrap:balance;max-width:18ch;letter-spacing:-0.025em;}
+.cta-band h2 em{font-style:italic;color:var(--saffron);}
+.cta-band p{color:color-mix(in srgb, var(--night-text) 86%, transparent);margin:0;max-width:44ch;}
+.cta-band .btn{background:var(--saffron);border-color:var(--saffron);color:var(--night);}
 .cta-band .btn:hover{background:transparent;color:var(--night-text);border-color:var(--night-text);}
 
+/* ==== THE RING ====
+   The section is taller than the screen on purpose; the ring sticks in the
+   middle of it and turns as that height is scrolled. Height is in vh rather
+   than a fixed px so the turn takes about the same number of wheel notches
+   on any display. */
+.ring-track{background:var(--canvas);padding-block:clamp(2rem,5vh,4rem);}
+.ring-travel{position:relative;}
+/* Not sticky. Pinning the page for three screen-heights meant the wheel
+   stopped moving the document and turned the ring instead, which reads as
+   the page having frozen. The ring now sits in a normal-height section and
+   takes its rotation from its own passage through the viewport, so scrolling
+   never stops. */
+.ring-frame{position:relative;height:min(74vh,600px);display:flex;align-items:center;justify-content:center;overflow:hidden;perspective:2200px;}
+/* These two defaults must match what the component measures, or the ring is
+   laid out at one size by the server and snapped to another the moment it
+   hydrates — sixteen cards visibly jumping. The JS derives radius from 46%
+   of the stage width, and card width from the chord between neighbours
+   (2R·sin(180/16) × 0.78 ≈ 0.304R), which is 46vw and 14vw here. */
+.ring-stage{
+  position:relative;width:100%;height:min(62vh,460px);transform-style:preserve-3d;
+  --ring-r:clamp(220px, 46vw, 620px);
+  /* Derived from the clamped radius, not from vw directly: once the radius
+     hits its 620px ceiling a plain vw card keeps growing past it and the two
+     drift apart again. 0.3044 is 2·sin(180/16)·0.78 — the chord factor for
+     sixteen cards. Revisit the constant if the collection size changes. */
+  --card-w:clamp(112px, calc(var(--ring-r) * 0.3044), 230px);
+}
+.ring-card{
+  position:absolute;left:50%;top:50%;
+  width:var(--card-w,240px);
+  margin-left:calc(var(--card-w,240px) / -2);
+  margin-top:calc(var(--card-w,240px) * -0.625);
+  backface-visibility:hidden;
+}
+/* The white mat again, so a painting on the ring is framed the same way it
+   is everywhere else on the site. */
+.ring-card figure{margin:0;background:var(--paper);padding:10px 10px 0;box-shadow:0 24px 44px -28px rgba(38,32,56,.5);}
+.ring-card img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;}
+.ring-card figcaption{padding:.7rem .1rem .8rem;text-align:center;}
+.ring-card .t{display:block;font-family:var(--serif);font-style:italic;font-weight:500;font-size:1rem;color:var(--ink);line-height:1.2;}
+.ring-card .m{display:block;margin-top:.2rem;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);}
+.ring-head{position:absolute;top:clamp(1rem,3vh,2.5rem);left:0;right:0;z-index:5;text-align:center;pointer-events:none;}
+.ring-head .section-title{margin-top:.5rem;}
+.ring-foot{position:absolute;bottom:clamp(.5rem,2vh,1.5rem);left:0;right:0;z-index:5;text-align:center;}
+.ring-foot .textlink{pointer-events:auto;}
+
+@media (max-width:900px){
+  .ring-frame{height:min(62vh,460px);}
+  .ring-stage{height:min(50vh,340px);}
+}
+/* Without the drift the ring still turns, but only as far as the reader
+   scrolls it — nothing moves on its own. */
+
+/* ==== HOVER-PREVIEW LIST (the three energies) ====
+   Names on hairlines; point at one and its painting follows the cursor. */
+.showcase{position:relative;}
+.showcase-list{list-style:none;margin:0;padding:0;border-bottom:1px solid var(--line);}
+.showcase-row{
+  display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:1rem;
+  padding:1.5rem .25rem;border-top:1px solid var(--line);
+  position:relative;cursor:default;transition:padding-left .35s var(--ease);
+}
+a.showcase-row{cursor:pointer;}
+.showcase-row:focus-visible{outline:2px solid var(--iris-deep);outline-offset:3px;}
+/* A saffron rule grows in from the left as the row wakes up. */
+.showcase-row::before{
+  content:"";position:absolute;left:0;top:50%;height:1px;width:0;
+  background:var(--saffron);transition:width .4s var(--ease);
+}
+.showcase-row.on{padding-left:2.6rem;}
+.showcase-row.on::before{width:1.9rem;}
+.showcase-row .who{display:inline-flex;align-items:center;gap:.7rem;}
+.showcase-row .nm{
+  font-family:var(--serif);font-weight:500;
+  font-size:clamp(1.6rem,1.2rem + 1.4vw,2.4rem);line-height:1;color:var(--ink);
+}
+.showcase-row.on .nm{color:var(--iris-deep);}
+.showcase-row .arw{color:var(--iris);opacity:0;transform:translateX(-.4rem);transition:opacity .3s ease, transform .3s var(--ease);}
+.showcase-row.on .arw{opacity:1;transform:none;}
+.showcase-row .meta{
+  font-size:0.66rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--muted);text-align:right;
+}
+.showcase-row .inline-shot{display:none;}
+
+/* The floating frame. Same white mat the paintings wear everywhere else. */
+.showcase-preview{
+  position:fixed;left:0;top:0;z-index:60;pointer-events:none;
+  opacity:0;transition:opacity .32s ease;
+  will-change:transform;
+}
+.showcase-preview.on{opacity:1;}
+.showcase-preview .mat{
+  position:relative;width:250px;height:310px;overflow:hidden;
+  background:var(--paper);padding:9px;
+  box-shadow:0 30px 60px -34px rgba(38,32,56,.62);
+}
+.showcase-preview .mat img{
+  position:absolute;inset:9px;width:calc(100% - 18px);height:calc(100% - 18px);
+  object-fit:cover;transition:opacity .45s ease, transform .55s var(--ease), filter .45s ease;
+}
+
+/* No hover, no floating frame — the painting sits in the row instead. */
+@media (hover:none),(pointer:coarse){
+  .showcase-preview{display:none;}
+  .showcase-row{grid-template-columns:1fr auto;row-gap:1.1rem;}
+  .showcase-row .inline-shot{
+    display:block;grid-column:1 / -1;width:100%;max-width:320px;
+    aspect-ratio:4/5;object-fit:cover;background:var(--paper);
+    padding:8px;box-shadow:0 18px 34px -26px rgba(38,32,56,.5);
+  }
+  .showcase-row.on{padding-left:.25rem;}
+  .showcase-row.on::before{width:0;}
+}
+
+/* ==== THE STUDIO WALL ====
+   Her own painting, enlarged and held right back, bleeding off the left edge
+   behind the portrait. It gives the section the drama her snapshots cannot,
+   and it does it with her work rather than with decoration. Kept under 0.2
+   opacity and desaturated so the portrait and the type stay on top of it. */
+.studio-wall{position:relative;isolation:isolate;overflow:clip;}
+.studio-wall .wall{
+  position:absolute;z-index:-1;pointer-events:none;
+  left:-14%;top:-12%;width:78%;height:124%;
+  opacity:.17;filter:saturate(.55);
+  -webkit-mask-image:radial-gradient(70% 62% at 42% 50%, #000 30%, transparent 78%);
+  mask-image:radial-gradient(70% 62% at 42% 50%, #000 30%, transparent 78%);
+}
+.studio-wall .wall img{width:100%;height:100%;object-fit:cover;}
+/* The portrait sits on paper so it reads as pinned to the wall, not merged
+   into it. */
+.studio-wall .artist-figure .shot{background:var(--paper);padding:12px;box-shadow:0 34px 60px -40px rgba(38,32,56,.55);}
+
+@media (max-width:1000px){
+  .studio-wall .wall{left:-22%;width:104%;height:100%;opacity:.13;}
+}
+
+/* Copy that names an interaction has to match the device it is read on. */
+.on-touch{display:none;}
+@media (hover:none),(pointer:coarse){
+  .on-hover{display:none;}
+  .on-touch{display:inline;}
+}
+
+/* The artist, given the same depth as everything else on the page. The
+   portrait and the painting beside it share one perspective and take
+   different amounts of the pointer's swing, so they separate instead of
+   sitting flat. --tx/--ty come from PlateTilt; both are 0 at rest, and on
+   touch they never change. */
+.studio-wall .artist-figure{--tx:0;--ty:0;perspective:1400px;position:relative;}
+.studio-wall .artist-figure .shot,
+.studio-wall .artist-figure .beside{transition:transform .4s var(--ease);}
+.studio-wall .artist-figure:hover .shot,
+.studio-wall .artist-figure:hover .beside{transition:transform .12s linear;}
+.studio-wall .artist-figure .shot{
+  transform:rotateY(calc(var(--tx) * 9deg)) rotateX(calc(var(--ty) * -6deg))
+            translate3d(calc(var(--tx) * 8px), calc(var(--ty) * 6px), 0);
+}
+.studio-wall .artist-figure .beside{
+  position:absolute;z-index:3;right:-6%;bottom:-7%;width:min(46%,190px);margin:0;
+  background:var(--paper);padding:9px;
+  box-shadow:0 30px 52px -34px rgba(38,32,56,.6);
+  transform:rotateY(calc(-8deg + var(--tx) * 20deg)) rotateX(calc(var(--ty) * -13deg))
+            rotateZ(2deg)
+            translate3d(calc(var(--tx) * 22px), calc(var(--ty) * 16px), 60px);
+}
+.studio-wall .artist-figure .beside img{display:block;width:100%;height:auto;}
+.studio-wall .artist-figure .beside figcaption{
+  padding-top:.5rem;font-size:0.55rem;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--muted);text-align:center;
+}
+/* The stamp rides furthest forward, so it reads as sitting on the glass. */
+.studio-wall .artist-figure .stamp{
+  transform:translate3d(calc(var(--tx) * 30px), calc(var(--ty) * 22px), 90px);
+  transition:transform .4s var(--ease);
+}
+
+@media (max-width:1000px){
+  .studio-wall .artist-figure .beside{right:-3%;bottom:-5%;width:min(42%,150px);}
+}
+@media (max-width:620px){
+  .studio-wall .artist-figure .beside{width:min(40%,128px);right:0;bottom:-4%;}
+}
+
+/* ==== COLOUR RIBBONS ====
+   Her four colours, with a light travelling along each one.
+
+   The line holds still; a short bright segment runs its length and comes
+   round again. Every path declares pathLength=100, so a dash of `14 86` is
+   14% of the curve on all four regardless of their real lengths, and one
+   keyframe — offset 100 to 0 — walks it end to end. Hand-measured dash
+   values would have to be recalculated every time a curve was touched.
+
+   Each ribbon is drawn twice: a dim base so the shape is always readable,
+   and the spark over it carrying the glow. The glow lives only on the
+   spark — putting it on the whole line lit the entire curve at once, which
+   is the thing that read as flat.
+
+   The four runs are 7.3, 9.1, 6.2 and 11.4 seconds with negative delays, so
+   they are already mid-flight on arrival and never travel in step.
+*/
+.ribbons{
+  position:absolute;inset:-14% -24%;z-index:1;
+  width:auto;height:auto;pointer-events:none;overflow:visible;
+}
+.rb{fill:none;stroke-linecap:round;}
+
+/* The resting shape. Faint, no glow — it is there to be followed, not seen. */
+.rb-base{stroke-width:1.5;opacity:.22;}
+
+/* The light. 14% of the curve, bright, and glowing in three stacked halos:
+   tight core, mid, wide bloom. */
+.rb-spark{
+  stroke-width:3;
+  stroke-dasharray:14 86;
+  stroke-dashoffset:100;
+  animation:rb-travel 7.3s linear infinite;
+}
+@keyframes rb-travel{from{stroke-dashoffset:100;}to{stroke-dashoffset:0;}}
+
+.rb-iris    .rb-base,.rb-iris    .rb-spark{stroke:var(--iris);}
+.rb-lotus   .rb-base,.rb-lotus   .rb-spark{stroke:var(--lotus);}
+.rb-saffron .rb-base,.rb-saffron .rb-spark{stroke:var(--saffron);}
+.rb-peri    .rb-base,.rb-peri    .rb-spark{stroke:#8FB3DE;}
+
+.rb-iris    .rb-spark{filter:drop-shadow(0 0 3px var(--iris))    drop-shadow(0 0 9px var(--iris))    drop-shadow(0 0 22px var(--iris));    animation-duration:7.3s; animation-delay:-1.4s;}
+.rb-lotus   .rb-spark{filter:drop-shadow(0 0 3px var(--lotus))   drop-shadow(0 0 10px var(--lotus))  drop-shadow(0 0 24px var(--lotus));   animation-duration:9.1s; animation-delay:-5.2s;}
+.rb-saffron .rb-spark{filter:drop-shadow(0 0 3px var(--saffron)) drop-shadow(0 0 9px var(--saffron)) drop-shadow(0 0 22px var(--saffron)); animation-duration:6.2s; animation-delay:-3.1s;}
+.rb-peri    .rb-spark{filter:drop-shadow(0 0 3px #8FB3DE)        drop-shadow(0 0 9px #8FB3DE)        drop-shadow(0 0 22px #8FB3DE);        animation-duration:11.4s;animation-delay:-7.6s;}
+
+/* The portrait and the mark stay in front of them. */
+.artist-figure .shot{position:relative;z-index:2;}
+.artist-figure .stamp{z-index:4;}
+/* And so does the reading copy — the ribbons reach past the figure they
+   belong to, and would otherwise lay a lit stroke across a paragraph. */
+.bio-grid .bio-body,.artist-grid .artist-copy{position:relative;z-index:3;}
+
+@media (max-width:620px){
+  .ribbons{inset:-8% -12%;}
+  .rb-base{stroke-width:1.2;}
+  .rb-spark{stroke-width:2.2;}
+}
+@media (prefers-reduced-motion:reduce){
+  /* No travelling light. The ribbons simply rest, at full length. */
+  .rb-spark{animation:none;stroke-dasharray:none;stroke-dashoffset:0;opacity:.5;}
+}
+
 /* ==== FOOTER ==== */
-.footer{background:var(--canvas);padding-block:clamp(3rem,6vh,4.5rem) 2rem;}
-.footer .top{display:flex;justify-content:space-between;gap:2rem;flex-wrap:wrap;align-items:flex-start;border-top:1px solid var(--line);padding-top:2.4rem;}
+.footer{background:var(--canvas);padding-block:clamp(3.5rem,7vh,5rem) 2rem;}
+.footer .top{display:flex;justify-content:space-between;gap:2.5rem;flex-wrap:wrap;align-items:flex-start;border-top:1px solid var(--line);padding-top:2.8rem;}
 .footer .wordmark{font-size:1.5rem;}
 .footer .cols{display:flex;gap:clamp(2rem,6vw,5rem);flex-wrap:wrap;}
-.footer .col h4{font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin:0 0 1rem;font-weight:500;}
-.footer .col a,.footer .col span{display:block;font-size:0.9rem;color:var(--ink-soft);margin-bottom:.55rem;font-weight:300;}
-.footer .col a:hover{color:var(--brass-deep);}
-.footer .base{margin-top:2.6rem;padding-top:1.4rem;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:0.76rem;color:var(--muted);letter-spacing:0.03em;}
-.footer .preview-note{color:var(--brass-deep);}
+.footer .col h4{font-size:0.62rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--iris-deep);margin:0 0 1.1rem;font-weight:500;}
+.footer .col a,.footer .col span{display:block;font-size:0.9rem;color:var(--ink-soft);margin-bottom:.6rem;font-weight:300;}
+.footer .col a:hover{color:var(--iris-deep);}
+.footer .base{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:0.72rem;color:var(--muted);}
+.footer .preview-note{color:var(--iris-deep);}
 
 /* ==== INTERIOR PAGE HEADER ==== */
-.page-head{padding-top:clamp(8rem,17vh,11rem);padding-bottom:clamp(2.5rem,6vh,4rem);}
-.page-head .label{display:block;margin-bottom:1.1rem;}
-.page-head h1{font-family:var(--serif);font-weight:500;font-size:clamp(2.6rem,1.6rem + 4vw,4.6rem);line-height:1.02;letter-spacing:-0.01em;margin:0;text-wrap:balance;}
-.page-head .lead{margin-top:1.6rem;max-width:52ch;color:var(--ink-soft);font-size:clamp(1.05rem,1rem + 0.3vw,1.2rem);line-height:1.7;font-weight:300;}
+.page-head{padding-top:clamp(9rem,19vh,13rem);padding-bottom:clamp(3rem,7vh,5rem);}
+.page-head .label{display:block;margin-bottom:1.3rem;}
+.page-head h1{font-family:var(--serif);font-weight:500;font-size:clamp(1.9rem,1.4rem + 2.2vw,3.3rem);line-height:0.98;letter-spacing:-0.028em;margin:0;text-wrap:balance;}
+.page-head h1 em{font-style:italic;color:var(--iris-deep);}
+.page-head .lead{margin-top:1.9rem;max-width:48ch;color:var(--ink-soft);font-size:clamp(0.98rem,0.95rem + 0.16vw,1.08rem);line-height:1.75;}
 .page-head.bordered{border-bottom:1px solid var(--line);}
 
 /* ==== FILTERS ==== */
-.filters{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:clamp(2rem,4vh,3rem);align-items:center;}
-.filter{font-family:var(--sans);font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);background:transparent;border:1px solid var(--line);padding:.55rem 1.1rem;border-radius:100px;cursor:pointer;transition:background .25s ease, color .25s ease, border-color .25s ease;}
+.filters{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:clamp(2.5rem,5vh,3.5rem);align-items:center;}
+.filter{font-family:var(--sans);font-weight:500;font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);background:transparent;border:1px solid var(--line);padding:.65rem 1.25rem;cursor:pointer;transition:background .25s ease,color .25s ease,border-color .25s ease;}
 .filter:hover{border-color:var(--ink);color:var(--ink);}
 .filter.active{background:var(--ink);border-color:var(--ink);color:var(--canvas);}
-.gallery-count{margin-left:auto;font-size:0.78rem;color:var(--muted);letter-spacing:0.05em;font-variant-numeric:tabular-nums;}
+.filter:focus-visible{outline:2px solid var(--iris-deep);outline-offset:2px;}
+.gallery-count{margin-left:auto;font-size:0.72rem;color:var(--muted);letter-spacing:0.14em;text-transform:uppercase;font-variant-numeric:tabular-nums;}
 
 /* ==== LIGHTBOX ==== */
-.lightbox{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:clamp(1rem,4vw,3rem);background:color-mix(in srgb, var(--night) 88%, transparent);backdrop-filter:blur(6px);}
+.lightbox{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:clamp(1rem,4vw,3rem);background:color-mix(in srgb, var(--night) 93%, transparent);backdrop-filter:blur(6px);}
 .lightbox.open{display:flex;}
-.lb-inner{display:grid;grid-template-columns:auto 320px;max-width:min(1100px,94vw);max-height:90vh;background:var(--paper);box-shadow:0 40px 120px -30px rgba(0,0,0,.6);}
+.lb-inner{display:grid;grid-template-columns:auto 350px;max-width:min(1150px,94vw);max-height:90vh;background:var(--paper);}
 .lb-imgwrap{background:var(--night);display:flex;align-items:center;justify-content:center;overflow:hidden;}
 .lb-imgwrap img{max-width:100%;max-height:90vh;object-fit:contain;display:block;}
-.lb-info{padding:clamp(1.6rem,3vw,2.4rem);display:flex;flex-direction:column;gap:.4rem;}
-.lb-info .num{font-family:var(--serif);font-style:italic;color:var(--brass);font-size:1rem;}
-.lb-info h3{font-family:var(--serif);font-weight:500;font-size:1.9rem;line-height:1.1;margin:.2rem 0 0;color:var(--ink);}
-.lb-info .meta{font-size:0.78rem;letter-spacing:0.04em;color:var(--muted);margin-top:.4rem;font-variant-numeric:tabular-nums;}
-.lb-info .story{margin-top:1.1rem;color:var(--ink-soft);font-size:0.98rem;line-height:1.7;}
-.lb-info .lb-cta{margin-top:auto;padding-top:1.6rem;}
-.lb-close{position:absolute;top:1.2rem;right:1.4rem;width:2.6rem;height:2.6rem;border-radius:50%;border:1px solid rgba(237,231,219,.4);background:transparent;color:var(--night-text);font-size:1.3rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .25s ease;}
-.lb-close:hover{background:rgba(237,231,219,.15);}
+.lb-info{padding:clamp(1.8rem,3vw,2.8rem);display:flex;flex-direction:column;gap:.3rem;}
+.lb-info .num{font-family:var(--serif);font-style:italic;color:var(--saffron);font-size:1.15rem;}
+.lb-info h3{font-family:var(--serif);font-weight:600;font-size:2.1rem;line-height:1.08;margin:.3rem 0 0;color:var(--ink);letter-spacing:-0.015em;}
+.lb-info .meta{font-size:0.74rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-top:.6rem;}
+.lb-info .story{margin-top:1.3rem;color:var(--ink-soft);font-size:0.98rem;line-height:1.75;}
+.lb-info .lb-cta{margin-top:auto;padding-top:1.8rem;}
+.lb-close{position:absolute;top:1.3rem;right:1.5rem;width:2.7rem;height:2.7rem;border:1px solid rgba(247,248,252,.4);background:transparent;color:var(--night-text);font-size:1.35rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .25s ease;}
+.lb-close:hover{background:rgba(247,248,252,.15);}
+.lb-close:focus-visible{outline:2px solid var(--saffron);outline-offset:2px;}
 
 /* ==== CONTACT ==== */
-.contact-grid{display:grid;grid-template-columns:1.3fr 0.8fr;gap:clamp(2.5rem,6vw,5.5rem);align-items:start;}
-.form .seg{display:inline-flex;border:1px solid var(--line);border-radius:100px;padding:.28rem;margin-bottom:2rem;background:var(--paper);}
-.form .seg button{font-family:var(--sans);font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);background:transparent;border:0;padding:.55rem 1.3rem;border-radius:100px;cursor:pointer;transition:background .25s ease, color .25s ease;}
+.contact-grid{display:grid;grid-template-columns:1.25fr 0.75fr;gap:clamp(2.5rem,6vw,5.5rem);align-items:start;}
+.form .seg{display:inline-flex;border:1px solid var(--line);padding:.3rem;margin-bottom:2.2rem;background:var(--paper);}
+.form .seg button{font-family:var(--sans);font-weight:500;font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);background:transparent;border:0;padding:.6rem 1.4rem;cursor:pointer;transition:background .25s ease,color .25s ease;}
 .form .seg button.on{background:var(--ink);color:var(--canvas);}
-.field{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem;}
-.field label{font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-soft);}
-.field input,.field textarea{font-family:var(--sans);font-size:1rem;font-weight:300;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:2px;padding:.85rem 1rem;transition:border-color .25s ease;width:100%;}
-.field input:focus,.field textarea:focus{outline:none;border-color:var(--brass);}
-.field textarea{resize:vertical;min-height:130px;}
-.form .row{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+.field{display:flex;flex-direction:column;gap:.55rem;margin-bottom:1.6rem;}
+.field label{font-family:var(--sans);font-weight:500;font-size:0.66rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
+.field input,.field textarea{font-family:var(--sans);font-size:1rem;font-weight:400;color:var(--ink);background:var(--paper);border:1px solid var(--line);padding:.95rem 1.1rem;transition:border-color .25s ease;width:100%;}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--iris-deep);}
+.field textarea{resize:vertical;min-height:140px;}
+.form .row{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;}
 .commission-only{display:none;}
 .form.mode-commission .commission-only{display:flex;}
-.form-note{font-size:0.8rem;color:var(--muted);margin-top:.4rem;}
-.form-status{margin-top:1.2rem;font-size:0.9rem;color:var(--brass-deep);}
-.contact-side .block{margin-bottom:2.2rem;}
-.contact-side h4{font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin:0 0 .8rem;font-weight:500;}
-.contact-side a,.contact-side p{color:var(--ink-soft);font-size:1rem;font-weight:300;margin:0 0 .3rem;line-height:1.6;}
-.contact-side a:hover{color:var(--brass-deep);}
+.form-note{font-size:0.8rem;color:var(--muted);margin-top:.5rem;}
+.form-status{margin-top:1.3rem;font-size:0.92rem;color:var(--iris-deep);}
+.contact-side .block{margin-bottom:2.4rem;}
+.contact-side h4{font-size:0.62rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--iris-deep);margin:0 0 .9rem;font-weight:500;}
+.contact-side a,.contact-side p{color:var(--ink-soft);font-size:1rem;font-weight:300;margin:0 0 .35rem;line-height:1.7;}
+.contact-side a:hover{color:var(--iris-deep);}
 
-/* ==== ABOUT PAGE EXTRAS ==== */
-.bio-grid{display:grid;grid-template-columns:0.8fr 1.1fr;gap:clamp(2.5rem,6vw,5rem);align-items:start;}
-.bio-portrait{aspect-ratio:4/5;background:linear-gradient(150deg,#ECE6DA,#E0D8C9 60%,#D8CFBD);position:relative;overflow:hidden;box-shadow:0 24px 50px -38px rgba(26,22,19,.5);display:flex;align-items:flex-end;padding:1.3rem;}
-.bio-portrait::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 30% 20%, rgba(255,255,255,.5), transparent 60%);}
-.bio-portrait .ph{position:relative;font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:#8a7f6b;}
-.bio-body p{color:var(--ink-soft);font-size:clamp(1.05rem,1rem + 0.3vw,1.15rem);line-height:1.8;font-weight:300;max-width:60ch;}
-.pullquote{border-left:2px solid var(--brass);padding-left:1.4rem;margin:2rem 0;font-family:var(--serif);font-style:italic;font-size:clamp(1.4rem,1.1rem + 1.4vw,2rem);line-height:1.35;color:var(--ink);}
+/* ==== ABOUT PAGE ==== */
+.about{padding-block:var(--sec-y);}
+.bio-grid{display:grid;grid-template-columns:0.8fr 1.1fr;gap:clamp(2.5rem,6vw,5.5rem);align-items:start;}
+.bio-portrait{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--paper);}
+.bio-portrait img{width:100%;height:100%;object-fit:cover;}
+.bio-body p{color:var(--ink-soft);font-size:clamp(0.98rem,0.95rem + 0.16vw,1.06rem);line-height:1.85;font-weight:300;max-width:58ch;}
+.pullquote{border-left:2px solid var(--saffron);padding-left:1.6rem;margin:2.4rem 0;font-family:var(--serif);font-style:italic;font-weight:500;font-size:clamp(1.2rem,1rem + 0.9vw,1.7rem);line-height:1.28;color:var(--ink);}
 
-/* ==== SCROLL REVEAL (progressive enhancement) ==== */
-.reveal{transition:opacity .9s ease, transform .9s cubic-bezier(.16,.7,.2,1);}
-html.js-reveal .reveal{opacity:0;transform:translateY(18px);}
-html.js-reveal .reveal.in{opacity:1;transform:none;}
-.d1{transition-delay:.08s;} .d2{transition-delay:.16s;} .d3{transition-delay:.24s;} .d4{transition-delay:.32s;} .d5{transition-delay:.4s;}
+/* Four details from the paintings, each on the white mat the artwork wears
+   everywhere else, and stepped so the row reads as pinned-up studio scraps
+   rather than a strip of thumbnails. */
+.studio-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.8rem,2vw,1.4rem);margin-top:clamp(2rem,4vh,3rem);}
+.studio-strip > div{background:var(--paper);padding:8px;box-shadow:0 20px 36px -28px rgba(38,32,56,.55);transition:transform .45s var(--ease);}
+.studio-strip > div:nth-child(odd){transform:translateY(.7rem) rotate(-.7deg);}
+.studio-strip > div:nth-child(even){transform:translateY(-.35rem) rotate(.6deg);}
+.studio-strip > div:hover{transform:translateY(-.3rem) rotate(0deg);}
+.studio-strip div{position:relative;aspect-ratio:1;overflow:hidden;}
+.studio-strip > div{overflow:visible;aspect-ratio:auto;}
+.studio-strip img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease);}
+.studio-strip div:hover img{transform:scale(1.05);}
+
+/* ==== REVEAL ==== */
+.reveal{transition:opacity .7s ease, transform .7s var(--ease);}
+html[data-reveal] .reveal{opacity:0;transform:translateY(10px);}
+html[data-reveal] .reveal.in{opacity:1;transform:none;}
+.d1{transition-delay:.07s;} .d2{transition-delay:.14s;} .d3{transition-delay:.21s;} .d4{transition-delay:.28s;} .d5{transition-delay:.35s;}
 
 /* ==== RESPONSIVE ==== */
+@media (max-width:1000px){
+  .popgrid{grid-template-columns:repeat(2,1fr);}
+  .popgrid > *:nth-child(3){margin-top:0;}
+  .artist-grid{grid-template-columns:1fr;}
+  .artist-figure{max-width:26rem;}
+}
 @media (max-width:900px){
-  .hero-grid{grid-template-columns:1fr;gap:2.6rem;}
-  .hero-figure{max-width:440px;}
-  .statement .container{grid-template-columns:1fr;}
   .grid{grid-template-columns:repeat(2,1fr);}
-  .about-grid{grid-template-columns:1fr;}
-  .portrait{max-width:420px;order:-1;}
-  .triad{grid-template-columns:1fr;}
-  .deity{border-right:0;border-bottom:1px solid var(--line);padding-right:0;}
-  .deity:last-child{border-bottom:0;}
+  .triad{grid-template-columns:1fr;gap:2rem;}
   .bio-grid{grid-template-columns:1fr;}
-  .bio-portrait{max-width:400px;}
+  .bio-portrait{max-width:26rem;}
   .contact-grid{grid-template-columns:1fr;}
+  .corridor{height:min(82vh,660px);}
+  .studio-strip{grid-template-columns:repeat(2,1fr);gap:1.1rem;}
 }
 @media (max-width:760px){
   .lb-inner{grid-template-columns:1fr;max-height:92vh;overflow:auto;}
-  .lb-imgwrap img{max-height:60vh;}
+  .lb-imgwrap img{max-height:58vh;}
 }
 @media (max-width:620px){
   .nav-links{display:none;}
-  .grid{grid-template-columns:1fr;gap:2.4rem;}
-  .work .tile{max-width:460px;}
-  .hero-meta{gap:1.4rem;}
+  .nav{flex-wrap:wrap;}
+  .nav.open{background:var(--canvas);box-shadow:0 1px 0 var(--line);}
+  .nav-toggle{display:flex;}
+  /* Scoped to .nav so it outranks .btn on specificity, not source order. */
+  .nav .nav-inquire{display:none;}
+  .nav-panel[hidden]{display:none;}
+  .nav-panel{display:flex;flex-direction:column;align-items:flex-start;gap:1.3rem;width:100%;padding:1.6rem 0 .6rem;}
+  .nav-panel a{font-size:0.82rem;font-weight:400;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-soft);}
+  .nav-panel a.active{color:var(--ink);border-bottom:1px solid var(--iris);padding-bottom:.25rem;}
+  .nav-panel .btn{margin-top:.5rem;}
+
+  .grid{grid-template-columns:1fr;gap:3rem;}
+  .popgrid{grid-template-columns:1fr;gap:3rem;}
+  .popgrid > *:nth-child(2){margin-top:0;}
   .form .row{grid-template-columns:1fr;}
+  /* The tilt is pointer-driven; a touch screen has no hover, so the cards
+     stand flat rather than pretending. */
+  .popcard{perspective:none;}
+  .popcard-art,.popcard-label{transform:none;}
+  .corridor-overlay::before{background:linear-gradient(180deg,
+    color-mix(in srgb, var(--canvas) 78%, transparent) 0%,
+    var(--canvas) 20%,
+    var(--canvas) 78%,
+    color-mix(in srgb, var(--canvas) 78%, transparent) 100%);}
 }
 @media (prefers-reduced-motion:reduce){
   .reveal{opacity:1 !important;transform:none !important;transition:none;}
-  .artframe img,.work .tile img{transition:none;}
+  .work .tile img,.studio-strip img{transition:none;}
+  .popcard-inner{transition:none !important;}
+  .popcard-sheen{display:none;}
 }

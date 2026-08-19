@@ -52,7 +52,7 @@ export default function GalleryClient({ works }: { works: Work[] }) {
             <button className="tile" onClick={() => setActive(i)} aria-label={`View ${w.title} in detail`}>
               <Image
                 src={`/art/${w.slug}.jpg`}
-                alt={`${w.title}, contemporary devotional painting of ${w.subject}`}
+                alt={w.alt}
                 fill
                 sizes="(max-width:620px) 100vw, (max-width:900px) 50vw, 33vw"
                 style={{ objectFit: "cover" }}
@@ -85,9 +85,9 @@ export default function GalleryClient({ works }: { works: Work[] }) {
             <div className="lb-imgwrap">
               <Image
                 src={`/art/${cur.slug}.jpg`}
-                alt={cur.title}
-                width={1208}
-                height={1500}
+                alt={cur.alt}
+                width={1200}
+                height={1600}
                 style={{ width: "auto", height: "auto", maxWidth: "100%", maxHeight: "90vh" }}
               />
             </div>

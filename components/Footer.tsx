@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Footer() {
@@ -6,8 +7,16 @@ export default function Footer() {
       <div className="container">
         <div className="top">
           <div>
-            <Link className="wordmark" href="/">
-              Sweta Dassani<span className="dot">.</span>
+            <Link className="brandlock" href="/" aria-label="Sweta Dassani, home">
+              <Image
+                src="/logo/SwetaDassani_Mark_Ink.png"
+                alt=""
+                width={1005}
+                height={744}
+              />
+              <span className="wordmark">
+                Sweta Dassani<span className="dot">.</span>
+              </span>
             </Link>
             <p style={{ marginTop: "1rem", maxWidth: "30ch", color: "var(--muted)", fontSize: "0.9rem" }}>
               Contemporary devotional paintings. Mumbai, India.
@@ -35,7 +44,9 @@ export default function Footer() {
         </div>
         <div className="base">
           <span>&copy; 2026 Sweta Dassani. All works original.</span>
-          <span className="preview-note">Design preview &middot; placeholder art and copy</span>
+          <span className="preview-note">
+            Design preview &middot; titles, sizes and years to be confirmed
+          </span>
         </div>
       </div>
     </footer>

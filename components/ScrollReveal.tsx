@@ -18,8 +18,9 @@ export default function ScrollReveal() {
       return;
     }
 
-    document.documentElement.classList.add("js-reveal");
-
+    // `data-reveal` is stamped on by a blocking script in the document head,
+    // before first paint. Setting it here instead would let the server HTML
+    // paint fully visible and then fade everything out on hydration.
     if (!("IntersectionObserver" in window)) {
       items.forEach((el) => el.classList.add("in"));
       return;
