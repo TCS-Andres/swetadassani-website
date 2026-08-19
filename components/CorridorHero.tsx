@@ -50,8 +50,8 @@ export default function CorridorHero() {
           <em>Contemporary expression.</em>
         </h1>
         <p className="sub reveal d2">
-          Original acrylics of Shiva, Krishna, and Ganesha — painted not as
-          icons, but as energies. Strength. Love. Wisdom.
+          I paint Shiva, Krishna and Ganesha — not as icons, but as energies.
+          Strength. Love. Wisdom.
         </p>
         <div className="acts reveal d3">
           <Link className="btn" href="/portfolio">

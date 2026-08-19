@@ -63,7 +63,7 @@ export default function GalleryClient({ works }: { works: Work[] }) {
               <div className="body">
                 <div className="wl-title">{w.title}</div>
                 <div className="wl-meta">Acrylic on canvas · {w.size} · {w.year}</div>
-                <div className="price">Inquire for price</div>
+                <Link className="price" href="/contact">Inquire for price</Link>
               </div>
             </div>
           </article>

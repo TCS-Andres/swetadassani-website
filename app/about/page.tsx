@@ -29,9 +29,9 @@ export default function About() {
             Sweta <em>Dassani</em>
           </h1>
           <p className="lead reveal d2">
-            A Mumbai-based painter giving contemporary form to sacred stories,
-            where devotion, vibrant color, and a deeply personal hand meet on
-            the canvas.
+            I'm a Mumbai-based painter giving contemporary form to sacred
+            stories, where devotion, vibrant colour and a deeply personal hand
+            meet on the canvas.
           </p>
         </div>
       </header>
@@ -66,27 +66,26 @@ export default function About() {
           </PlateTilt>
           <div className="bio-body reveal d1">
             <p>
-              Sweta began painting at the age of six. Her development has been
-              shaped by a combination of formal training and years of
-              self-directed exploration, and that duality lives in the work: a
-              respect for tradition paired with a personal, contemporary hand.
+              I began painting at the age of six. What I do has been shaped by
+              formal training and by years of self-directed exploration, and
+              that duality lives in the work: a respect for tradition paired
+              with a personal, contemporary hand.
             </p>
             <p>
-              Working primarily in acrylics, she is known for her paintings of
-              Shiva, Krishna, and Ganesha, and for dance. Each piece brings
-              vibrant color, expressive detail, and a contemporary point of view
-              to sacred subjects that have inspired generations.
+              I work mostly in acrylics, and I am known for my paintings of
+              Shiva, Krishna and Ganesha, and for dance. Each piece brings
+              vibrant colour, expressive detail and a contemporary point of
+              view to sacred subjects that have inspired generations.
             </p>
             <div className="pullquote">Painting is where I find stillness.</div>
             <p>
-              When she begins a new work, she is drawn not only to the form of
-              the deity but to the energy and emotion it represents. She works
-              in layers, letting color, texture, expression, and movement
-              develop gradually, painting the human emotion inside the sacred
-              form.
+              When I begin a new work, I am drawn not only to the form of the
+              deity but to the energy and emotion it carries. I work in layers,
+              letting colour, texture, expression and movement develop
+              gradually, painting the human emotion inside the sacred form.
             </p>
             <p>
-              The subjects are sacred and timeless; the emotions she explores
+              The subjects are sacred and timeless; the emotions I explore
               through them are deeply human.
             </p>
           </div>
@@ -116,8 +115,8 @@ export default function About() {
             <h2 className="section-title">Not icons. Energies.</h2>
             <span className="brushwave" aria-hidden />
             <p style={{ marginTop: "1.4rem" }}>
-              She rarely thinks of a painting as simply an image of the divine.
-              It is an attempt to give form to something that cannot always be
+              I rarely think of a painting as simply an image of the divine. It
+              is an attempt to give form to something that cannot always be
               expressed in words.
             </p>
           </div>

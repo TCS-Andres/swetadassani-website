@@ -47,7 +47,7 @@ export default function Home() {
                 Hover any piece — the canvas lifts out of its frame.
               </span>
               <span className="on-touch">
-                Three from the collection, in her own words.
+                Three from the collection, in my own words.
               </span>
             </p>
           </div>
@@ -88,9 +88,14 @@ export default function Home() {
               the form is sacred and timeless, the emotion inside it is deeply
               human.
             </p>
-            <Link className="textlink reveal d3" href="/portfolio">
-              See the collection <span className="arw">→</span>
-            </Link>
+            <div className="plate-acts reveal d3">
+              <Link className="btn" href="/contact">
+                Inquire about this piece
+              </Link>
+              <Link className="textlink" href="/portfolio">
+                See the collection <span className="arw">→</span>
+              </Link>
+            </div>
           </div>
 
           <PlateTilt className="plates reveal d1">
@@ -117,35 +122,45 @@ export default function Home() {
         </div>
       </section>
 
-      <CircularGallery
-        items={works.map((w) => ({
-          slug: w.slug,
-          title: w.title,
-          meta: `${w.size} · ${w.year}`,
-          alt: w.alt,
-        }))}
-      >
+      {/* Head and foot sit above and below the ring rather than floating on
+          top of it. Overlaid, their clearance depended on how tall they
+          happened to be — and the moment the link became a button it grew up
+          into the paintings, leaving 3px. */}
+      <section className="ring-section">
         <div className="ring-head">
           <span className="label">The Collection</span>
           <h2 className="section-title">More from the studio</h2>
         </div>
+
+        <CircularGallery
+          items={works.map((w) => ({
+            slug: w.slug,
+            title: w.title,
+            meta: `${w.size} · ${w.year}`,
+            alt: w.alt,
+          }))}
+        />
+
         <div className="ring-foot">
+          <Link className="btn" href="/contact">
+            Inquire about a piece
+          </Link>
           <Link className="textlink" href="/portfolio">
             View all {works.length} works <span className="arw">→</span>
           </Link>
         </div>
-      </CircularGallery>
+      </section>
 
       <section className="energy petal-wash">
         <div className="container">
           <div className="energy-intro reveal">
             <span className="label">Three Energies</span>
             <h2 className="section-title" style={{ marginTop: "1rem" }}>
-              She paints the feeling, not the figure
+              I paint the feeling, not the figure
             </h2>
             <p style={{ marginTop: "1.2rem" }}>
-              She rarely thinks of a painting as an image of the divine. Each
-              subject is an energy to explore.
+              I rarely think of a painting as an image of the divine. Each
+              subject is an energy I want to explore.
             </p>
           </div>
           <div className="reveal d1">
@@ -198,16 +213,16 @@ export default function Home() {
               inner world.
             </blockquote>
             <p className="body reveal d2">
-              Sweta began painting at six. Formal training and years of
+              I began painting at six. Formal training and years of
               self-directed exploration, in equal measure — a respect for
-              tradition carried by a personal, contemporary hand. She works in
-              layers, letting colour, texture and movement develop slowly, until
-              the human emotion inside the sacred form comes through.
+              tradition carried by my own hand. I work in layers, letting
+              colour, texture and movement develop slowly, until the human
+              emotion inside the sacred form comes through.
             </p>
             <div className="sig reveal d3">Sweta</div>
             <div className="more reveal d3">
               <Link className="textlink" href="/about">
-                Read her story <span className="arw">→</span>
+                Read my story <span className="arw">→</span>
               </Link>
             </div>
           </div>
@@ -228,9 +243,9 @@ export default function Home() {
             Found the piece you have <em>been looking for?</em>
           </h2>
           <p className="reveal d2">
-            Every work is an original. Reach out to inquire about a painting, or
-            to commission something made for your space. Worldwide shipping, in
-            USD or INR.
+            Every work is an original. Tell me which piece you have your eye
+            on, or commission something made for your space. I ship worldwide,
+            in USD or INR.
           </p>
           <Link className="btn reveal d3" href="/contact">
             Start an inquiry

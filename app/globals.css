@@ -245,10 +245,23 @@ em{font-style:italic;}
 .wl-title{font-family:var(--serif);font-weight:600;font-size:1.45rem;line-height:1.15;letter-spacing:-0.012em;color:var(--ink);}
 .wl-meta{margin-top:.4rem;font-size:0.78rem;letter-spacing:0.06em;color:var(--muted);font-variant-numeric:tabular-nums;text-transform:uppercase;}
 
-.price{margin-top:.7rem;font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--iris-deep);display:inline-flex;align-items:center;gap:.55rem;transition:color .25s ease;}
-.price::before{content:"";width:1.4rem;height:1px;background:var(--saffron);display:inline-block;flex:none;transition:width .3s var(--ease);}
-a.price:hover{color:var(--ink);}
-a.price:hover::before{width:2.2rem;}
+/* The per-piece ask. This was a hairline text link, which read as a caption
+   and got skipped — it is the point of the page, so it is now a button on
+   every card. Outlined rather than filled so sixteen of them down a grid
+   sit under the paintings instead of shouting over them. */
+.price{
+  margin-top:.9rem;display:inline-flex;align-items:center;gap:.5rem;
+  font-family:var(--sans);font-weight:500;font-size:0.64rem;
+  letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--ink);background:transparent;
+  border:1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  padding:.58rem 1.05rem;border-radius:2px;
+  transition:background .25s ease,color .25s ease,border-color .25s ease;
+}
+.price::after{content:"→";color:var(--saffron);transition:transform .3s var(--ease),color .25s ease;}
+a.price:hover{background:var(--ink);color:var(--canvas);border-color:var(--ink);}
+a.price:hover::after{color:var(--saffron);transform:translateX(3px);}
+a.price:focus-visible{outline:2px solid var(--iris-deep);outline-offset:2px;}
 
 .works-foot{margin-top:clamp(3rem,6vh,4.5rem);display:flex;justify-content:center;}
 .tag-new{position:absolute;top:1rem;left:1rem;z-index:5;background:var(--lotus);color:var(--night);font-family:var(--sans);font-weight:500;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;padding:.4rem .7rem;}
@@ -401,7 +414,7 @@ a.price:hover::before{width:2.2rem;}
    middle of it and turns as that height is scrolled. Height is in vh rather
    than a fixed px so the turn takes about the same number of wheel notches
    on any display. */
-.ring-track{background:var(--canvas);padding-block:clamp(2rem,5vh,4rem);}
+.ring-track{background:var(--canvas);}
 .ring-travel{position:relative;}
 /* Not sticky. Pinning the page for three screen-heights meant the wheel
    stopped moving the document and turned the ring instead, which reads as
@@ -437,10 +450,13 @@ a.price:hover::before{width:2.2rem;}
 .ring-card figcaption{padding:.7rem .1rem .8rem;text-align:center;}
 .ring-card .t{display:block;font-family:var(--serif);font-style:italic;font-weight:500;font-size:1rem;color:var(--ink);line-height:1.2;}
 .ring-card .m{display:block;margin-top:.2rem;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);}
-.ring-head{position:absolute;top:clamp(1rem,3vh,2.5rem);left:0;right:0;z-index:5;text-align:center;pointer-events:none;}
+/* In the flow now, so the clearance is a real margin rather than whatever
+   space the overlay happened to leave. */
+.ring-section{padding-block:clamp(2.5rem,6vh,4.5rem);}
+.ring-head{text-align:center;padding-inline:var(--pad-x);margin-bottom:clamp(2rem,4.5vh,3.25rem);}
 .ring-head .section-title{margin-top:.5rem;}
-.ring-foot{position:absolute;bottom:clamp(.5rem,2vh,1.5rem);left:0;right:0;z-index:5;text-align:center;}
-.ring-foot .textlink{pointer-events:auto;}
+.ring-foot{margin-top:clamp(2.25rem,5vh,3.5rem);padding-inline:var(--pad-x);text-align:center;}
+
 
 @media (max-width:900px){
   .ring-frame{height:min(62vh,460px);}
@@ -641,6 +657,18 @@ a.showcase-row{cursor:pointer;}
 @media (prefers-reduced-motion:reduce){
   /* No travelling light. The ribbons simply rest, at full length. */
   .rb-spark{animation:none;stroke-dasharray:none;stroke-dashoffset:0;opacity:.5;}
+}
+
+/* Where a button and a quieter link sit together. The button carries the
+   ask; the link is the way out for someone not ready to ask yet. */
+.plate-acts,.head-acts{display:flex;align-items:center;gap:1.4rem;flex-wrap:wrap;margin-top:1.5rem;}
+.plate-wide .plate-acts .btn{background:var(--saffron);border-color:var(--saffron);color:var(--night);}
+.plate-wide .plate-acts .btn:hover{background:transparent;color:var(--night-text);border-color:var(--night-text);}
+.plate-wide .plate-acts .textlink{margin-top:0;}
+.ring-foot{display:flex;align-items:center;justify-content:center;gap:1.4rem;flex-wrap:wrap;}
+
+@media (max-width:620px){
+  .plate-acts,.head-acts,.ring-foot{gap:1rem;}
 }
 
 /* ==== FOOTER ==== */
