@@ -7,12 +7,12 @@ import * as React from "react";
  *
  * The two plates share one perspective but sit at different depths, so they
  * are given different amounts of the same rotation: the near one swings more
- * than the far one. That difference is what reads as parallax — turn both by
+ * than the far one. That difference is what reads as parallax: turn both by
  * the same angle and the pair looks like a flat picture of two paintings
  * rather than two paintings standing apart.
  *
- * Values go out as CSS custom properties so the rest of the composition —
- * the resting angles, the widths, the shadows — stays in the stylesheet.
+ * Values go out as CSS custom properties so the rest of the composition,
+ * the resting angles, the widths, the shadows, stays in the stylesheet.
  */
 export default function PlateTilt({
   children,

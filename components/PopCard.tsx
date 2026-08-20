@@ -8,7 +8,7 @@ import { useRef, type PointerEvent } from "react";
  * A painting lifted off the page.
  *
  * The frame tilts toward the pointer and the canvas sits on a plane in front
- * of it, so parallax opens between the two as you move — a shallow diorama,
+ * of it, so parallax opens between the two as you move: a shallow diorama,
  * not a card that spins. The tilt is deliberately small: past about 10° the
  * painting starts to key-stone and reads as a gimmick rather than a lift, and
  * the artwork is the thing that has to stay legible.
@@ -32,7 +32,7 @@ export default function PopCard({
   alt: string;
   /** The word above the title: the energy this piece explores. */
   energy?: string;
-  /** A small Lotus Pink flag — the red-dot equivalent. Use sparingly. */
+  /** A small Lotus Pink flag, the red-dot equivalent. Use sparingly. */
   tag?: string;
   priority?: boolean;
 }) {

@@ -44,7 +44,7 @@ export default function Home() {
             <p className="sub reveal d2">
               {/* "Hover" is a lie on a phone; the tilt is pointer-only. */}
               <span className="on-hover">
-                Hover any piece — the canvas lifts out of its frame.
+                Hover any piece: the canvas lifts out of its frame.
               </span>
               <span className="on-touch">
                 Three from the collection, in my own words.
@@ -84,7 +84,7 @@ export default function Home() {
             <span className="brushwave reveal d1" aria-hidden />
             <p className="reveal d2">
               Ardhanarishvara: the divine as both halves at once, dancing.
-              Strength and grace in a single body. Each subject is a doorway —
+              Strength and grace in a single body. Each subject is a doorway:
               the form is sacred and timeless, the emotion inside it is deeply
               human.
             </p>
@@ -124,7 +124,7 @@ export default function Home() {
 
       {/* Head and foot sit above and below the ring rather than floating on
           top of it. Overlaid, their clearance depended on how tall they
-          happened to be — and the moment the link became a button it grew up
+          happened to be, and the moment the link became a button it grew up
           into the paintings, leaving 3px. */}
       <section className="ring-section">
         <div className="ring-head">
@@ -214,7 +214,7 @@ export default function Home() {
             </blockquote>
             <p className="body reveal d2">
               I began painting at six. Formal training and years of
-              self-directed exploration, in equal measure — a respect for
+              self-directed exploration, in equal measure: a respect for
               tradition carried by my own hand. I work in layers, letting
               colour, texture and movement develop slowly, until the human
               emotion inside the sacred form comes through.

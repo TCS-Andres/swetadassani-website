@@ -4,7 +4,7 @@ import * as React from "react";
  * Her four colours as ribbons, with a light running along each one.
  *
  * The ribbon itself holds still. What moves is a short bright segment that
- * travels the length of the curve and comes round again — light running down
+ * travels the length of the curve and comes round again, light running down
  * a wire, not the wire being waved about.
  *
  * Two things make that possible without any JavaScript:

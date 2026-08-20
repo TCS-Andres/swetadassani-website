@@ -77,7 +77,7 @@ above.
 1. **The corridor** (`CorridorHero`, home hero). Her paintings ride out of the
    dark toward the viewer on two mirrored rails. Pure CSS 3D and perspective;
    it pauses rather than stops under `prefers-reduced-motion`. Decorative and
-   `aria-hidden` — every painting in it is also reachable as a real captioned
+   `aria-hidden`: every painting in it is also reachable as a real captioned
    work further down.
 2. **The pop-up cards** (`PopCard`, "Step closer"). Three paintings lifted off
    the page: the frame tilts to the pointer and the canvas sits on a plane in
@@ -85,7 +85,7 @@ above.
    reduced motion.
 3. **The wide plate** (`.plate-wide` on the home page). One painting at full
    bleed with the title set over its darker edge. This replaced an earlier
-   WebGL "accretion disc" section, which the client cut — the drama should come
+   WebGL "accretion disc" section, which the client cut, since the drama should come
    from her own work, not from a simulated galaxy. `components/ui/
    blackhole-hero-section.tsx` and `components/CosmicBand.tsx` were removed
    with it.
@@ -101,13 +101,13 @@ above.
 ## Design system
 
 > **Decision, and a live conflict.** The palette below is taken from the
-> **logo itself** — antique gold `#C3A177` on limestone `#F5F3EE`, sampled from
+> **logo itself**: antique gold `#C3A177` on limestone `#F5F3EE`, sampled from
 > the delivered PNGs. It deliberately departs from
 > `SwetaDassani_BrandGuide_v1.0`, which specifies a *cool* system (Iris
 > `#8878C3`, Saffron `#FDC133`, Violet Ink `#262038`).
 >
-> The reason: the guide's own logo files — `SwetaDassani_Mark_Saffron.png`,
-> `SwetaDassani_Logo_Primary_Iris.png` — were **never delivered**. The files we
+> The reason: the guide's own logo files (`SwetaDassani_Mark_Saffron.png`,
+> `SwetaDassani_Logo_Primary_Iris.png`) were **never delivered**. The files we
 > have belong to the earlier warm generation, and a cool page wrapped around a
 > warm mark reads as two different brands. Approved by the client.
 >
@@ -118,7 +118,7 @@ above.
 
 | Token | Hex | Use |
 | --- | --- | --- |
-| Limestone | `#F5F3EE` | the everyday ground — the logo's own background |
+| Limestone | `#F5F3EE` | the everyday ground, the logo's own background |
 | Sand | `#EDE7DB` | half-tone bands, for rhythm between sections |
 | Paper | `#FFFFFF` | mats and cards, so art never sits on a tint |
 | Ink | `#221C15` | warm near-black, all text |
@@ -130,24 +130,24 @@ above.
 
 Three rules hold it together: **limestone everywhere**, so the paintings are the
 only loud thing; **gold is a drawn line**, never a filled shape and never body
-text (`#C3A177` fails contrast — `--gold-deep` carries anything readable); and
+text (`#C3A177` fails contrast, so `--gold-deep` carries anything readable); and
 **type is large, serif and generously spaced**.
 
-The artist's own ornaments — the lotus divider, the brushstroke underline and
-the petal tile — are recoloured to the gold and applied as CSS masks, so they
+The artist's own ornaments (the lotus divider, the brushstroke underline and
+the petal tile) are recoloured to the gold and applied as CSS masks, so they
 take their colour from the token and can never drift out of palette.
 
 Display type: Cormorant Garamond (500, 500 italic, 600). Body and labels: Jost
 (300, 400, 500). Both are self-hosted, converted to woff2 from the brand kit's
 TrueType masters.
 
-> The font files that shipped with the original skeleton were **duplicates** —
-> one Cormorant face copied under two weight names, one Jost face under three —
+> The font files that shipped with the original skeleton were **duplicates**:
+> one Cormorant face copied under two weight names, one Jost face under three,
 > so every "weight" rendered identically. They have been replaced with the real
 > faces from `Brand/Fonts/`.
 
 Two rules worth keeping in mind when editing: **Saffron and Lotus Pink never
-carry text on light grounds** (1.5:1 and 2.7:1 — they fail badly), so Iris Deep
+carry text on light grounds** (1.5:1 and 2.7:1, so they fail badly), so Iris Deep
 carries every accent that has to be read. And **elevation is expressed with
 space, not shadow**; the system is flat by design.
 
@@ -157,7 +157,7 @@ Per the Master Brain (Appendix A), these are outstanding on Sweta's side:
 
 - **The remaining paintings.** She has 25 finished pieces at launch; 16 are
   photographed and in the repo. Nine more photos are needed.
-- **The works list** — real titles, mediums, sizes, years, and availability.
+- **The works list**: real titles, mediums, sizes, years, and availability.
   Everything in `content/works.ts` is a placeholder written from the images.
 - **Her Instagram handle** and the contact email. Both are still placeholders
   (`hello@swetadassani.com`, and a bare instagram.com link).
@@ -166,7 +166,7 @@ Per the Master Brain (Appendix A), these are outstanding on Sweta's side:
   app)
 - **Replace the logo files.** The PNGs in `public/logo/` are the retired
   gold-on-limestone generation, not the Iris / Saffron / Violet Ink system the
-  brand guide specifies — the guide's own file list names
+  brand guide specifies. The guide's own file list names
   `SwetaDassani_Mark_Saffron.png` and `SwetaDassani_Logo_Primary_Iris.png`,
   neither of which was delivered. The gold reads muddy next to Saffron on the
   dark band. Get the corrected exports from the designer.

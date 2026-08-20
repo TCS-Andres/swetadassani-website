@@ -5,7 +5,7 @@ import * as React from "react";
 /**
  * The opening curtain: her mark, with a light running around it.
  *
- * Rendered by the server so it is painted on the very first frame — a loader
+ * Rendered by the server so it is painted on the very first frame: a loader
  * that only appears once React has hydrated has already missed the moment it
  * exists for.
  *

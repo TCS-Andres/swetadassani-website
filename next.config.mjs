@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 // `npm run export` sets STATIC_EXPORT=1 and produces a plain HTML/CSS/JS copy
-// of the site in ./out — an index.html you can open by double-clicking, or drop
+// of the site in ./out: an index.html you can open by double-clicking, or drop
 // onto any static host. Normal `npm run dev` / `npm run build` are unaffected,
 // so a Vercel deploy still gets optimised images and the full Next runtime.
 const isExport = process.env.STATIC_EXPORT === "1";

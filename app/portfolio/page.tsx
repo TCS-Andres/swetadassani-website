@@ -17,7 +17,7 @@ export default function Portfolio() {
           <span className="label reveal">The Collection</span>
           <h1 className="reveal d1">The Work</h1>
           <p className="lead reveal d2">
-            Every painting here is an original — a conversation between sacred tradition and my own hand. I add new pieces every month. Open any work to see it larger, with its story, and tell me if one speaks to you.
+            Every painting here is an original, a conversation between sacred tradition and my own hand. I add new pieces every month. Open any work to see it larger, with its story, and tell me if one speaks to you.
           </p>
         </div>
       </header>
