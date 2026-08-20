@@ -225,41 +225,23 @@ em{font-style:italic;}
 .statement p{font-family:var(--serif);font-weight:500;font-style:italic;font-size:clamp(1.5rem,1.1rem + 1.6vw,2.4rem);line-height:1.18;letter-spacing:-0.018em;color:var(--ink);max-width:20ch;margin:0;text-wrap:balance;}
 .statement .who{max-width:46ch;color:var(--muted);font-size:1rem;font-weight:300;line-height:1.8;font-style:normal;font-family:var(--sans);}
 
-/* ==== THE STRIP (phones only) ====
-   The phone counterpart to the corridor: the same paintings, carried past on a
-   single rail instead of rushing the viewer on two.
+/* ==== THE CORRIDOR BAND (phones only) ====
+   The mobile hero's tunnel. It is the corridor component again, not a
+   substitute, so it moves exactly as the desktop one does.
 
-   It has to read as one unbroken drift, so the whole thing is ONE transform on
-   ONE element, not a card each. The track holds the sequence twice and travels
-   exactly half its own width, which lands the second copy where the first
-   began, so the loop closes on itself with nothing to see. The spacing is
-   margin on each frame rather than flex `gap`, because a gap sits only between
-   items: the halves would differ by one gap and the seam would jump every lap.
-   Fixed height, natural width, so a portrait and a square each keep their
-   proportions. */
-.mstream{
+   Every length inside that component is `cqw`, a percentage of its own width,
+   so shape follows the box: give it the proportions of the desktop hero and it
+   draws the desktop tunnel to scale, with no geometry retuned. 16/9 is a touch
+   airier than the hero's own 1.94:1, which keeps the nearest cards from
+   grazing the top and bottom edges on a narrow screen.
+
+   It clips its own cards. The rails throw them well past the frame, and
+   without this the ones leaving would ride up into the headline. */
+.corridor-band{
   display:none;
-  width:100%;overflow:hidden;
-  /* Softens both ends so frames arrive and leave rather than being cut off. */
-  -webkit-mask:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%);
-  mask:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%);
-}
-/* No `will-change` here on purpose: an animated transform is promoted to the
-   compositor anyway, and hinting it only pins a permanent backing store for a
-   track three phone-widths wide. */
-.mstream-track{
-  display:flex;width:max-content;
-  animation:mstream-run 34s linear infinite;
-}
-.mstream-track img{
-  height:clamp(8.5rem,32vw,11rem);width:auto;
-  margin-right:.85rem;
-  background:var(--paper);
-  box-shadow:0 14px 30px -22px rgba(38,32,56,.6);
-}
-@keyframes mstream-run{
-  from{transform:translate3d(0,0,0);}
-  to{transform:translate3d(-50%,0,0);}
+  width:100%;
+  aspect-ratio:16/9;
+  overflow:hidden;
 }
 
 /* ==== SECTION HEADS ==== */
@@ -888,21 +870,23 @@ html[data-reveal] .reveal.in{opacity:1;transform:none;}
   /* The hero stacks on a phone instead of overlaying.
      A full-width headline leaves the rails nowhere to go, so any veil strong
      enough to carry the copy also buries the paintings. Stacking settles it:
-     the type gets clean ground, and the paintings run underneath as one
-     continuous strip. The corridor's 3D layer is switched off here (the strip
-     replaces it), which also spares a phone the twenty-odd transformed cards. */
-  .corridor,.corridor-overlay{min-height:0;height:auto;}
+     type on clean ground, then the tunnel below it, then the cue. Order is set
+     explicitly because the corridor's own 3D layer is the first child in the
+     DOM and the band is the third.
+
+     The desktop rail is switched off rather than moved. Its cards carry the
+     gallery files, 7.5MB across the nine on screen, and because they load
+     lazily, hiding it means a phone never asks for them. */
+  .corridor{display:flex;flex-direction:column;min-height:0;height:auto;}
   .corridor > div[aria-hidden].inset-0{display:none;}
-  .corridor-overlay{padding-bottom:clamp(2rem,5vh,2.75rem);}
+  .corridor-overlay{order:1;min-height:0;height:auto;padding-bottom:clamp(1.75rem,4.5vh,2.5rem);}
   .corridor-overlay::before{display:none;}
-  .mstream{display:block;}
-  .corridor-scroll{margin-top:clamp(1.6rem,4vh,2.4rem);}
+  .corridor-band{display:block;order:2;}
+  .corridor-scroll{order:3;margin-top:clamp(1.5rem,4vh,2.25rem);}
 }
 @media (prefers-reduced-motion:reduce){
   .reveal{opacity:1 !important;transform:none !important;transition:none;}
   .work .tile img,.studio-strip img{transition:none;}
   .popcard-inner{transition:none !important;}
   .popcard-sheen{display:none;}
-  /* Paused, not removed: the strip holds as a still row of paintings. */
-  .mstream-track{animation-play-state:paused;}
 }

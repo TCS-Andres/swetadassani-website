@@ -32,30 +32,35 @@ const SLUGS = [
 ];
 
 const STREAM = SLUGS.map((slug) => ({ src: `/art/${slug}.jpg` }));
+const STREAM_SM = SLUGS.map((slug) => ({ src: `/art/xs/${slug}.jpg` }));
 
 /**
- * The phone version of the corridor: the same paintings on one rail, running
- * beneath the type rather than behind it.
+ * The same corridor, sized for a phone and moved out from behind the type.
  *
- * The sequence is rendered twice so the track can travel exactly half its width
- * and land the second copy on the first, closing the loop with no seam. It
- * draws on `/art/xs`, sized for the ~9rem the strip actually paints at rather
- * than the gallery crops, because a phone waiting on a megabyte of decoration
- * is what makes frames arrive blank. The two copies share their sources, so
- * each painting is fetched once.
+ * It is a second instance of the component rather than an imitation, so the
+ * motion is identical: every length inside is `cqw`, a percentage of the
+ * container's width, which means a band cut to the desktop hero's proportions
+ * renders the desktop tunnel to scale. Nothing about the geometry is retuned.
  *
- * Decorative, like the corridor: every painting here is a captioned work
+ * Two instances rather than one because the sources have to differ. A card at
+ * its exit is about 420x590 on a desktop but 160x180 on a phone, and the
+ * gallery files the desktop rail uses come to 7.5MB across nine cards. Each
+ * instance is switched by CSS, and since the cards load lazily, whichever one
+ * is not displayed never fetches a byte.
+ *
+ * Decorative, like the desktop rail: every painting here is a captioned work
  * further down the page and in the portfolio.
  */
-function Strip() {
+function CorridorBand() {
   return (
-    <div className="mstream" aria-hidden>
-      <div className="mstream-track">
-        {[...SLUGS, ...SLUGS].map((slug, i) => (
-          <img key={`${slug}-${i}`} src={`/art/xs/${slug}.jpg`} alt="" decoding="async" draggable={false} />
-        ))}
-      </div>
-    </div>
+    <ImageStreamHero
+      images={STREAM_SM}
+      className="corridor-band"
+      cards={9}
+      speed={22}
+      axis={52}
+      aria-hidden
+    />
   );
 }
 
@@ -90,7 +95,7 @@ export default function CorridorHero() {
           </Link>
         </div>
       </div>
-      <Strip />
+      <CorridorBand />
       <div className="corridor-scroll" aria-hidden>
         {count} originals
       </div>
