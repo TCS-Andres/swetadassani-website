@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ImageStreamHero } from "@/components/ui/image-stream-hero";
 import { works } from "@/content/works";
@@ -8,7 +7,7 @@ import { works } from "@/content/works";
 /**
  * The home page opens with her paintings coming at you out of the dark.
  *
- * The corridor is decorative — it is `aria-hidden` inside the component, and
+ * The corridor is decorative: it is `aria-hidden` inside the component, and
  * every painting it streams is also reachable as a real, captioned work
  * further down the page and in the portfolio. So nothing here is load-bearing
  * for a screen reader, and the images carry no alt text by design.
@@ -17,7 +16,7 @@ import { works } from "@/content/works";
  * same sequence, so neighbouring entries are what a viewer sees side by side.
  * Alternating warm and cool keeps that pairing from going flat.
  */
-const STREAM = [
+const SLUGS = [
   "nataraja",
   "krishna-flute",
   "ganesha-beginnings",
@@ -30,27 +29,38 @@ const STREAM = [
   "dancer",
   "ganesha-rainbow",
   "beloved-dance",
-].map((slug) => ({ src: `/art/${slug}.jpg` }));
+];
+
+const STREAM = SLUGS.map((slug) => ({ src: `/art/${slug}.jpg` }));
 
 /**
- * The default rails are fitted to a wide viewport. On a portrait phone they
- * throw the near cards clear off both sides, so the corridor reads as empty.
- * A tighter spread and a smaller exit keep the whole stream inside the narrow
- * frame, so the paintings still rush the viewer, just at phone proportions.
+ * The phone version of the corridor: the same paintings on one rail, running
+ * beneath the type rather than behind it.
+ *
+ * The sequence is rendered twice so the track can travel exactly half its width
+ * and land the second copy on the first, closing the loop with no seam. It
+ * draws on `/art/xs`, sized for the ~9rem the strip actually paints at rather
+ * than the gallery crops, because a phone waiting on a megabyte of decoration
+ * is what makes frames arrive blank. The two copies share their sources, so
+ * each painting is fetched once.
+ *
+ * Decorative, like the corridor: every painting here is a captioned work
+ * further down the page and in the portfolio.
  */
-const MOBILE_PATH = { railBirth: -7, railExit: 26, exitHeight: 36, fan: 3 };
+function Strip() {
+  return (
+    <div className="mstream" aria-hidden>
+      <div className="mstream-track">
+        {[...SLUGS, ...SLUGS].map((slug, i) => (
+          <img key={`${slug}-${i}`} src={`/art/xs/${slug}.jpg`} alt="" decoding="async" draggable={false} />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function CorridorHero() {
   const count = works.length;
-  const [mobile, setMobile] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 620px)");
-    const apply = () => setMobile(mq.matches);
-    apply();
-    mq.addEventListener("change", apply);
-    return () => mq.removeEventListener("change", apply);
-  }, []);
 
   return (
     <ImageStreamHero
@@ -59,7 +69,6 @@ export default function CorridorHero() {
       cards={9}
       speed={22}
       axis={52}
-      path={mobile ? MOBILE_PATH : undefined}
     >
       <div className="corridor-overlay">
         <div className="kicker reveal">Contemporary Devotional Art</div>
@@ -69,7 +78,7 @@ export default function CorridorHero() {
           <em>Contemporary expression.</em>
         </h1>
         <p className="sub reveal d2">
-          I paint Shiva, Krishna and Ganesha — not as icons, but as energies.
+          I paint Shiva, Krishna and Ganesha, not as icons, but as energies.
           Strength. Love. Wisdom.
         </p>
         <div className="acts reveal d3">
@@ -81,6 +90,7 @@ export default function CorridorHero() {
           </Link>
         </div>
       </div>
+      <Strip />
       <div className="corridor-scroll" aria-hidden>
         {count} originals
       </div>

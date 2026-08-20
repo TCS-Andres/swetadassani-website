@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* ============ Sweta Dassani — her own palette =========================
+/* ============ Sweta Dassani, her own palette =========================
    The four colours are Sweta's, pulled from her paintings: Periwinkle,
    Iris, Saffron, Lotus Pink. Around them sits the guide's quiet chassis
    (Pearl ground, Violet Ink type) so the brights stay bright and the
@@ -8,7 +8,7 @@
 
    The contrast rules are the guide's, not preference:
      - Saffron and Lotus Pink are DECORATIVE on light grounds. Never type.
-       (1.5:1 and 2.7:1 — they fail as text.)
+       (1.5:1 and 2.7:1, so they fail as text.)
      - Saffron becomes type only on Violet Ink, where it reads 9.6:1. That
        pairing is reserved for the one dark band and the full-bleed plate.
      - Iris Deep is the text-level accent: labels, kickers, links.
@@ -17,21 +17,21 @@
 ====================================================================== */
 
 :root{
-  --canvas:#F7F8FC;      /* Pearl — the everyday ground */
-  --wash:#E0E8F5;        /* Periwinkle, let down — a tint, not a slab */
+  --canvas:#F7F8FC;      /* Pearl, the everyday ground */
+  --wash:#E0E8F5;        /* Periwinkle, let down to a tint, not a slab */
   --wash-soft:#F1F4FB;   /* barely there, for the largest areas */
   --paper:#FFFFFF;       /* mats and cards, so art never sits on a tint */
-  --ink:#262038;         /* Violet Ink — all type, and the dark surface */
+  --ink:#262038;         /* Violet Ink, all type and the dark surface */
   --ink-soft:#3E3660;
-  --muted:#5C587A;       /* Slate — captions and metadata */
-  --line:#DCE0EC;        /* Mist — hairlines */
+  --muted:#5C587A;       /* Slate, captions and metadata */
+  --line:#DCE0EC;        /* Mist, hairlines */
   --iris:#8878C3;        /* the workhorse: rules, dividers, numerals */
   --iris-deep:#584A99;   /* type-level accent, and the closing band */
   --saffron:#FDC133;     /* the devotional gold. Decorative on light */
   --lotus:#F955D2;       /* the joy note. Tags and celebrations only */
   /* Lotus Pink lifted for dark grounds. The true swatch measures 2.54:1 on
      Iris Deep, under the 3.0 a large word needs; this reads 4.10:1 and is
-     still plainly her pink. Only for type on the dark band — decorative
+     still plainly her pink. Only for type on the dark band; decorative
      pink stays #F955D2. */
   --lotus-light:#FCA6E4;
   --night:#262038;       /* the single dark band, before the footer */
@@ -115,7 +115,7 @@ em{font-style:italic;}
 .lotus-rule{
   position:relative;
   width:min(30rem,80%);height:2.6rem;margin:0 auto;
-  /* Saffron reads at 1.5:1 on Pearl — invisible. It only earns its place on
+  /* Saffron reads at 1.5:1 on Pearl, which is invisible. It only earns its place on
      a tinted or dark ground, which is why the divider lives on the band. */
   background:var(--saffron);
   -webkit-mask:url("/brand/divider-lotus-gold.png") center/contain no-repeat;
@@ -125,7 +125,7 @@ em{font-style:italic;}
 /* Lotus Pink where it belongs: the lotus itself. The standalone motif and the
    lotus inside the divider are the same drawing at the same scale (208x173
    against 1528x174), so sizing this to the rule's height lands it exactly on
-   top of the gold one — no nudging, and it stays aligned at any width. */
+   top of the gold one, with no nudging, and it stays aligned at any width. */
 .lotus-rule::after{
   content:"";position:absolute;top:0;left:50%;translate:-50% 0;
   height:100%;aspect-ratio:208/173;
@@ -196,7 +196,7 @@ em{font-style:italic;}
    at the edges. */
 .corridor-overlay::before{
   content:"";position:absolute;inset:0;z-index:-1;
-  /* Solid clear through the headline's full width — the type is wider than
+  /* Solid clear through the headline's full width, because the type is wider than
      it looks, and a narrower core let cards drift under the ends of the
      italic line. It then falls away fast, so the paintings out on the rails
      keep their full saturation. A broad, even veil would mute her colour,
@@ -214,7 +214,7 @@ em{font-style:italic;}
 .corridor .sub{margin:2rem auto 0;max-width:40ch;color:var(--ink-soft);font-size:clamp(0.98rem,0.94rem + 0.16vw,1.08rem);line-height:1.7;}
 .corridor .acts{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:2.6rem;}
 /* In the flow, not pinned to the bottom. Absolutely positioned it sat at a
-   fixed offset while the centred column above grew downward into it — on a
+   fixed offset while the centred column above grew downward into it: on a
    700px-tall window the cue crossed the buttons by 37px. */
 .corridor-scroll{margin-top:clamp(1.4rem,3.5vh,2.6rem);z-index:11;font-size:0.62rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:.7rem;}
 .corridor-scroll::after{content:"";width:1px;height:2.6rem;background:linear-gradient(var(--saffron),transparent);}
@@ -224,6 +224,43 @@ em{font-style:italic;}
 .statement .container{display:flex;flex-direction:column;align-items:center;gap:1.6rem;}
 .statement p{font-family:var(--serif);font-weight:500;font-style:italic;font-size:clamp(1.5rem,1.1rem + 1.6vw,2.4rem);line-height:1.18;letter-spacing:-0.018em;color:var(--ink);max-width:20ch;margin:0;text-wrap:balance;}
 .statement .who{max-width:46ch;color:var(--muted);font-size:1rem;font-weight:300;line-height:1.8;font-style:normal;font-family:var(--sans);}
+
+/* ==== THE STRIP (phones only) ====
+   The phone counterpart to the corridor: the same paintings, carried past on a
+   single rail instead of rushing the viewer on two.
+
+   It has to read as one unbroken drift, so the whole thing is ONE transform on
+   ONE element, not a card each. The track holds the sequence twice and travels
+   exactly half its own width, which lands the second copy where the first
+   began, so the loop closes on itself with nothing to see. The spacing is
+   margin on each frame rather than flex `gap`, because a gap sits only between
+   items: the halves would differ by one gap and the seam would jump every lap.
+   Fixed height, natural width, so a portrait and a square each keep their
+   proportions. */
+.mstream{
+  display:none;
+  width:100%;overflow:hidden;
+  /* Softens both ends so frames arrive and leave rather than being cut off. */
+  -webkit-mask:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%);
+  mask:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%);
+}
+/* No `will-change` here on purpose: an animated transform is promoted to the
+   compositor anyway, and hinting it only pins a permanent backing store for a
+   track three phone-widths wide. */
+.mstream-track{
+  display:flex;width:max-content;
+  animation:mstream-run 34s linear infinite;
+}
+.mstream-track img{
+  height:clamp(8.5rem,32vw,11rem);width:auto;
+  margin-right:.85rem;
+  background:var(--paper);
+  box-shadow:0 14px 30px -22px rgba(38,32,56,.6);
+}
+@keyframes mstream-run{
+  from{transform:translate3d(0,0,0);}
+  to{transform:translate3d(-50%,0,0);}
+}
 
 /* ==== SECTION HEADS ==== */
 .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:2.5rem;flex-wrap:wrap;margin-bottom:clamp(3rem,6vh,4.5rem);}
@@ -246,7 +283,7 @@ em{font-style:italic;}
 .wl-meta{margin-top:.4rem;font-size:0.78rem;letter-spacing:0.06em;color:var(--muted);font-variant-numeric:tabular-nums;text-transform:uppercase;}
 
 /* The per-piece ask. This was a hairline text link, which read as a caption
-   and got skipped — it is the point of the page, so it is now a button on
+   and got skipped. It is the point of the page, so it is now a button on
    every card. Outlined rather than filled so sixteen of them down a grid
    sit under the paintings instead of shouting over them. */
 .price{
@@ -301,7 +338,7 @@ a.price:focus-visible{outline:2px solid var(--iris-deep);outline-offset:2px;}
    Iris Deep, not the near-black. It is Iris darkened until type sits on it,
    so it belongs to her four rather than reading as a generic dark slab.
    Pearl measures 7.0:1 on it and Saffron 4.5:1, which is what lets the gold
-   italic stay. Plain Iris would look bolder and cannot carry the copy —
+   italic stay. Plain Iris would look bolder and cannot carry the copy,
    Saffron on it is 2.4:1, and it fails as text. The
    paintings are shown whole and tilted as a pair; the previous version
    cropped a single canvas to a 700px band, which threw away most of the
@@ -312,7 +349,7 @@ a.price:focus-visible{outline:2px solid var(--iris-deep);outline-offset:2px;}
 .plate-wide .copy h2{font-family:var(--serif);font-weight:500;font-size:clamp(1.7rem,1.2rem + 1.8vw,2.8rem);line-height:1.0;letter-spacing:-0.025em;color:var(--night-text);margin:.9rem 0 0;text-wrap:balance;}
 /* Her exact swatch, at her request. It measures 2.54:1 on Iris Deep, so it
    is the one place on the site where a word sits under the readable
-   threshold — kept because it is a two-word display accent beside a heading
+   threshold, kept because it is a two-word display accent beside a heading
    in Pearl, not copy anyone has to read. */
 .plate-wide .copy h2 em{font-style:italic;color:var(--lotus);}
 .plate-wide .copy .brushwave{background:var(--saffron);opacity:.85;}
@@ -383,7 +420,7 @@ a.price:focus-visible{outline:2px solid var(--iris-deep);outline-offset:2px;}
 .artist-figure::before{content:"";position:absolute;z-index:1;left:-1.6rem;bottom:-1.6rem;width:72%;height:62%;background:var(--wash);}
 /* The delivered mark PNG is the warm-gold generation, which clashes on a
    Pearl and Periwinkle page. Drawn as a mask instead, it takes the Iris
-   token — the guide's mark colour on light grounds — and can never drift.
+   token, the guide's mark colour on light grounds, and can never drift.
    Replace with a real Iris export when the designer supplies one. */
 .artist-figure .stamp{
   position:absolute;z-index:3;right:-1.1rem;top:-1.1rem;
@@ -424,7 +461,7 @@ a.price:focus-visible{outline:2px solid var(--iris-deep);outline-offset:2px;}
 .ring-frame{position:relative;height:min(74vh,600px);display:flex;align-items:center;justify-content:center;overflow:hidden;perspective:2200px;}
 /* These two defaults must match what the component measures, or the ring is
    laid out at one size by the server and snapped to another the moment it
-   hydrates — sixteen cards visibly jumping. The JS derives radius from 46%
+   hydrates, with sixteen cards visibly jumping. The JS derives radius from 46%
    of the stage width, and card width from the chord between neighbours
    (2R·sin(180/16) × 0.78 ≈ 0.304R), which is 46vw and 14vw here. */
 .ring-stage{
@@ -432,7 +469,7 @@ a.price:focus-visible{outline:2px solid var(--iris-deep);outline-offset:2px;}
   --ring-r:clamp(220px, 46vw, 620px);
   /* Derived from the clamped radius, not from vw directly: once the radius
      hits its 620px ceiling a plain vw card keeps growing past it and the two
-     drift apart again. 0.3044 is 2·sin(180/16)·0.78 — the chord factor for
+     drift apart again. 0.3044 is 2·sin(180/16)·0.78, the chord factor for
      sixteen cards. Revisit the constant if the collection size changes. */
   --card-w:clamp(112px, calc(var(--ring-r) * 0.3044), 230px);
 }
@@ -463,7 +500,7 @@ a.price:focus-visible{outline:2px solid var(--iris-deep);outline-offset:2px;}
   .ring-stage{height:min(50vh,340px);}
 }
 /* Without the drift the ring still turns, but only as far as the reader
-   scrolls it — nothing moves on its own. */
+   scrolls it; nothing moves on its own. */
 
 /* ==== HOVER-PREVIEW LIST (the three energies) ====
    Names on hairlines; point at one and its painting follows the cursor. */
@@ -514,7 +551,7 @@ a.showcase-row{cursor:pointer;}
   object-fit:cover;transition:opacity .45s ease, transform .55s var(--ease), filter .45s ease;
 }
 
-/* No hover, no floating frame — the painting sits in the row instead. */
+/* No hover, no floating frame, so the painting sits in the row instead. */
 @media (hover:none),(pointer:coarse){
   .showcase-preview{display:none;}
   .showcase-row{grid-template-columns:1fr auto;row-gap:1.1rem;}
@@ -602,12 +639,12 @@ a.showcase-row{cursor:pointer;}
    The line holds still; a short bright segment runs its length and comes
    round again. Every path declares pathLength=100, so a dash of `14 86` is
    14% of the curve on all four regardless of their real lengths, and one
-   keyframe — offset 100 to 0 — walks it end to end. Hand-measured dash
+   keyframe, offset 100 to 0, walks it end to end. Hand-measured dash
    values would have to be recalculated every time a curve was touched.
 
    Each ribbon is drawn twice: a dim base so the shape is always readable,
    and the spark over it carrying the glow. The glow lives only on the
-   spark — putting it on the whole line lit the entire curve at once, which
+   spark: putting it on the whole line lit the entire curve at once, which
    is the thing that read as flat.
 
    The four runs are 7.3, 9.1, 6.2 and 11.4 seconds with negative delays, so
@@ -619,7 +656,7 @@ a.showcase-row{cursor:pointer;}
 }
 .rb{fill:none;stroke-linecap:round;}
 
-/* The resting shape. Faint, no glow — it is there to be followed, not seen. */
+/* The resting shape. Faint, no glow: it is there to be followed, not seen. */
 .rb-base{stroke-width:1.5;opacity:.22;}
 
 /* The light. 14% of the curve, bright, and glowing in three stacked halos:
@@ -645,7 +682,7 @@ a.showcase-row{cursor:pointer;}
 /* The portrait and the mark stay in front of them. */
 .artist-figure .shot{position:relative;z-index:2;}
 .artist-figure .stamp{z-index:4;}
-/* And so does the reading copy — the ribbons reach past the figure they
+/* And so does the reading copy, since the ribbons reach past the figure they
    belong to, and would otherwise lay a lit stroke across a paragraph. */
 .bio-grid .bio-body,.artist-grid .artist-copy{position:relative;z-index:3;}
 
@@ -672,11 +709,11 @@ a.showcase-row{cursor:pointer;}
 }
 
 /* ==== THE OPENING CURTAIN ====
-   Her mark, with a light running around it in her four colours — the same
+   Her mark, with a light running around it in her four colours, the same
    idea as the ribbons, bent into a circle.
 
-   All four are on the ring at once — Iris, Lotus Pink, Saffron and
-   Periwinkle — spaced a quarter lap apart by negative delays on one shared
+   All four are on the ring at once (Iris, Lotus Pink, Saffron and
+   Periwinkle), spaced a quarter lap apart by negative delays on one shared
    animation, so they chase each other round rather than one stroke changing
    colour. pathLength=100 again, so the dash is a percentage of the circle
    rather than a number somebody has to recompute if the radius changes.
@@ -710,7 +747,7 @@ a.showcase-row{cursor:pointer;}
 @media (prefers-reduced-motion:reduce){
   /* Nothing travels; the four rest evenly around the ring. */
   .loader-spark{animation:none;}
-  /* Still all four, just held still — a quarter each, no travel. */
+  /* Still all four, just held still: a quarter each, no travel. */
   .ls-iris   {stroke-dasharray:24 76;stroke-dashoffset:0;}
   .ls-lotus  {stroke-dasharray:24 76;stroke-dashoffset:-25;}
   .ls-saffron{stroke-dasharray:24 76;stroke-dashoffset:-50;}
@@ -848,27 +885,24 @@ html[data-reveal] .reveal.in{opacity:1;transform:none;}
      stand flat rather than pretending. */
   .popcard{perspective:none;}
   .popcard-art,.popcard-label{transform:none;}
-  /* With the tightened rails (see CorridorHero MOBILE_PATH) the paintings ride
-     in two columns down the left and right, with the headline in the middle.
-     So the veil clears the sides, where the streaming paintings show in full,
-     and keeps a soft limestone column behind the type. A limestone halo on the
-     letters themselves carries legibility where a line reaches over a painting,
-     so the column can stay light and the art stays bright. */
-  .corridor-overlay::before{background:linear-gradient(90deg,
-    transparent 0%,
-    transparent 15%,
-    color-mix(in srgb, var(--canvas) 46%, transparent) 32%,
-    color-mix(in srgb, var(--canvas) 64%, transparent) 44%,
-    color-mix(in srgb, var(--canvas) 64%, transparent) 56%,
-    color-mix(in srgb, var(--canvas) 46%, transparent) 68%,
-    transparent 85%,
-    transparent 100%);}
-  .corridor .kicker,.corridor h1,.corridor .sub{
-    text-shadow:0 0 2px var(--canvas),0 1px 16px var(--canvas),0 0 34px var(--canvas);}
+  /* The hero stacks on a phone instead of overlaying.
+     A full-width headline leaves the rails nowhere to go, so any veil strong
+     enough to carry the copy also buries the paintings. Stacking settles it:
+     the type gets clean ground, and the paintings run underneath as one
+     continuous strip. The corridor's 3D layer is switched off here (the strip
+     replaces it), which also spares a phone the twenty-odd transformed cards. */
+  .corridor,.corridor-overlay{min-height:0;height:auto;}
+  .corridor > div[aria-hidden].inset-0{display:none;}
+  .corridor-overlay{padding-bottom:clamp(2rem,5vh,2.75rem);}
+  .corridor-overlay::before{display:none;}
+  .mstream{display:block;}
+  .corridor-scroll{margin-top:clamp(1.6rem,4vh,2.4rem);}
 }
 @media (prefers-reduced-motion:reduce){
   .reveal{opacity:1 !important;transform:none !important;transition:none;}
   .work .tile img,.studio-strip img{transition:none;}
   .popcard-inner{transition:none !important;}
   .popcard-sheen{display:none;}
+  /* Paused, not removed: the strip holds as a still row of paintings. */
+  .mstream-track{animation-play-state:paused;}
 }
