@@ -4,6 +4,7 @@ import { cormorant, jost } from "./fonts";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
+import PageLoader, { PageLoaderMarkup } from "@/components/PageLoader";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://swetadassani.com"),
@@ -64,12 +65,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        <PageLoaderMarkup />
         <div className="page">
           <Nav />
           <main>{children}</main>
           <Footer />
         </div>
         <ScrollReveal />
+        <PageLoader />
       </body>
     </html>
   );
