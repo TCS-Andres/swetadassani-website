@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ImageStreamHero } from "@/components/ui/image-stream-hero";
 import { works } from "@/content/works";
@@ -31,8 +32,25 @@ const STREAM = [
   "beloved-dance",
 ].map((slug) => ({ src: `/art/${slug}.jpg` }));
 
+/**
+ * The default rails are fitted to a wide viewport. On a portrait phone they
+ * throw the near cards clear off both sides, so the corridor reads as empty.
+ * A tighter spread and a smaller exit keep the whole stream inside the narrow
+ * frame, so the paintings still rush the viewer, just at phone proportions.
+ */
+const MOBILE_PATH = { railBirth: -7, railExit: 26, exitHeight: 36, fan: 3 };
+
 export default function CorridorHero() {
   const count = works.length;
+  const [mobile, setMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 620px)");
+    const apply = () => setMobile(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
 
   return (
     <ImageStreamHero
@@ -41,6 +59,7 @@ export default function CorridorHero() {
       cards={9}
       speed={22}
       axis={52}
+      path={mobile ? MOBILE_PATH : undefined}
     >
       <div className="corridor-overlay">
         <div className="kicker reveal">Contemporary Devotional Art</div>

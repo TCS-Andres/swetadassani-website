@@ -848,11 +848,23 @@ html[data-reveal] .reveal.in{opacity:1;transform:none;}
      stand flat rather than pretending. */
   .popcard{perspective:none;}
   .popcard-art,.popcard-label{transform:none;}
-  .corridor-overlay::before{background:linear-gradient(180deg,
-    color-mix(in srgb, var(--canvas) 78%, transparent) 0%,
-    var(--canvas) 20%,
-    var(--canvas) 78%,
-    color-mix(in srgb, var(--canvas) 78%, transparent) 100%);}
+  /* With the tightened rails (see CorridorHero MOBILE_PATH) the paintings ride
+     in two columns down the left and right, with the headline in the middle.
+     So the veil clears the sides, where the streaming paintings show in full,
+     and keeps a soft limestone column behind the type. A limestone halo on the
+     letters themselves carries legibility where a line reaches over a painting,
+     so the column can stay light and the art stays bright. */
+  .corridor-overlay::before{background:linear-gradient(90deg,
+    transparent 0%,
+    transparent 15%,
+    color-mix(in srgb, var(--canvas) 46%, transparent) 32%,
+    color-mix(in srgb, var(--canvas) 64%, transparent) 44%,
+    color-mix(in srgb, var(--canvas) 64%, transparent) 56%,
+    color-mix(in srgb, var(--canvas) 46%, transparent) 68%,
+    transparent 85%,
+    transparent 100%);}
+  .corridor .kicker,.corridor h1,.corridor .sub{
+    text-shadow:0 0 2px var(--canvas),0 1px 16px var(--canvas),0 0 34px var(--canvas);}
 }
 @media (prefers-reduced-motion:reduce){
   .reveal{opacity:1 !important;transform:none !important;transition:none;}
