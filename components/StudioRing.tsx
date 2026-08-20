@@ -194,9 +194,29 @@ export default function StudioRing({
     frame.addEventListener("pointercancel", onUp);
     frame.addEventListener("click", onClickCapture, true);
 
+    // Warming the cards is the other half of the observer's job. They sit
+    // inside a 3D transform, where lazy loading cannot be trusted: a card can
+    // turn to the front without the browser ever having counted it as visible,
+    // so it arrives blank and fills in late. Once the section is close, ask for
+    // all of them at once. They are small, and the ones the hero rail already
+    // pulled are shared, so most of this is a cache read.
+    let warmed = false;
+    const warm = () => {
+      if (warmed) return;
+      warmed = true;
+      cardsRef.current.forEach((c) => {
+        const img = c?.querySelector("img");
+        if (img && !img.complete) img.loading = "eager";
+      });
+    };
+
     const io = new IntersectionObserver(
-      (entries) => (onScreen = entries[0]?.isIntersecting ?? true),
-      { rootMargin: "150px 0px" },
+      (entries) => {
+        onScreen = entries[0]?.isIntersecting ?? true;
+        if (onScreen) warm();
+      },
+      // Wide enough that the cards are asked for before the section arrives.
+      { rootMargin: "400px 0px" },
     );
     io.observe(frame);
 
@@ -204,12 +224,28 @@ export default function StudioRing({
     ro.observe(stage);
     narrow.addEventListener("change", measure);
 
+    // Belt and braces on the warming. The observer covers the common case, but
+    // it only fires once the section is genuinely near, and it does not fire at
+    // all in a background tab. Idle time after first paint is the other chance:
+    // by then the hero has what it needs, and asking for the rest costs little.
+    const ric = (window as unknown as {
+      requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number;
+    }).requestIdleCallback;
+    const warmTimer = ric
+      ? ric(warm, { timeout: 2500 })
+      : window.setTimeout(warm, 1500);
+
     measure();
     render();
     raf = requestAnimationFrame(tick);
 
     return () => {
       cancelAnimationFrame(raf);
+      const cic = (window as unknown as {
+        cancelIdleCallback?: (h: number) => void;
+      }).cancelIdleCallback;
+      if (ric && cic) cic(warmTimer as number);
+      else clearTimeout(warmTimer as number);
       io.disconnect();
       ro.disconnect();
       narrow.removeEventListener("change", measure);
@@ -260,8 +296,11 @@ export default function StudioRing({
                 }}
               >
                 <figure>
+                  {/* The shared card crop, sized for what these paint rather
+                      than for the gallery. It is the same file the hero rail
+                      uses, so the ones it already pulled are free here. */}
                   <img
-                    src={`/art/sm/${w.slug}.jpg`}
+                    src={`/art/card/${w.slug}.webp`}
                     alt={w.alt}
                     loading="lazy"
                     decoding="async"

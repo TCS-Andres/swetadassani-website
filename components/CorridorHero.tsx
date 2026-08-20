@@ -32,7 +32,7 @@ const SLUGS = [
 ];
 
 const STREAM = SLUGS.map((slug) => ({ src: `/art/${slug}.jpg` }));
-const STREAM_SM = SLUGS.map((slug) => ({ src: `/art/xs/${slug}.jpg` }));
+const STREAM_SM = SLUGS.map((slug) => ({ src: `/art/card/${slug}.webp` }));
 
 /** Cards per rail. Also how many of the crops are worth preloading, since the
  *  component walks the list in order and never reaches the rest. */
@@ -84,7 +84,8 @@ export default function CorridorHero() {
           key={slug}
           rel="preload"
           as="image"
-          href={`/art/xs/${slug}.jpg`}
+          fetchPriority="high"
+          href={`/art/card/${slug}.webp`}
           media="(max-width: 620px)"
         />
       ))}

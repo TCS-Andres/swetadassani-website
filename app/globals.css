@@ -914,6 +914,16 @@ html[data-reveal] .reveal.in{opacity:1;transform:none;}
     --ring-r:max(300px, 115vw);
     --card-w:clamp(120px, calc(var(--ring-r) * 0.3044), 190px);
   }
+
+  /* Headlines run larger on a phone than the fluid scale gives them. Those
+     curves are tuned for the width they end at, and at 390px they bottom out
+     around the size of confident body copy, which makes the page read flatter
+     than it does on a desktop. These lift the display sizes by about a third
+     and keep the same ratios between them. */
+  .corridor h1{font-size:clamp(2.55rem, 1.9rem + 4.6vw, 3.4rem);}
+  .page-head h1{font-size:clamp(2.9rem, 2.2rem + 4.6vw, 3.6rem);}
+  h2.section-title{font-size:clamp(1.95rem, 1.55rem + 2.9vw, 2.5rem);}
+  .cta-band h2{font-size:clamp(2.2rem, 1.7rem + 3.4vw, 2.9rem);}
   .corridor-scroll{order:3;margin-top:clamp(1.5rem,4vh,2.25rem);}
 }
 @media (prefers-reduced-motion:reduce){
