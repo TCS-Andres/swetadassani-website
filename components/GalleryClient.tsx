@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import Lightbox from "@/components/Lightbox";
 import { type Work, SUBJECT_FILTERS, ROMAN } from "@/content/works";
 
 export default function GalleryClient({ works }: { works: Work[] }) {
@@ -13,20 +14,7 @@ export default function GalleryClient({ works }: { works: Work[] }) {
     .map((w, i) => ({ w, i }))
     .filter(({ w }) => filter === "All" || w.subject === filter);
 
-  useEffect(() => {
-    if (active === null) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setActive(null);
-    };
-    document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [active]);
-
-  const cur = active !== null ? works[active] : null;
+  const close = useCallback(() => setActive(null), []);
 
   return (
     <>
@@ -70,39 +58,7 @@ export default function GalleryClient({ works }: { works: Work[] }) {
         ))}
       </div>
 
-      {cur && active !== null && (
-        <div
-          className="lightbox open"
-          role="dialog"
-          aria-modal="true"
-          aria-label={cur.title}
-          onClick={() => setActive(null)}
-        >
-          <button className="lb-close" aria-label="Close" onClick={() => setActive(null)}>
-            ×
-          </button>
-          <div className="lb-inner" onClick={(e) => e.stopPropagation()}>
-            <div className="lb-imgwrap">
-              <Image
-                src={`/art/${cur.slug}.jpg`}
-                alt={cur.alt}
-                width={1200}
-                height={1600}
-                style={{ width: "auto", height: "auto", maxWidth: "100%", maxHeight: "90vh" }}
-              />
-            </div>
-            <div className="lb-info">
-              <div className="num">{ROMAN[active]}</div>
-              <h3>{cur.title}</h3>
-              <div className="meta">Acrylic on canvas · {cur.size} · {cur.year}</div>
-              <p className="story">{cur.story}</p>
-              <div className="lb-cta">
-                <Link className="btn" href="/contact">Inquire for price</Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <Lightbox works={works} index={active} onClose={close} />
     </>
   );
 }

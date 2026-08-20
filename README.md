@@ -59,11 +59,16 @@ above.
 
 - `app/` : routes (`page.tsx` home, `portfolio/`, `about/`, `contact/`),
   `layout.tsx`, `globals.css`, `fonts.ts`
-- `components/` : `Nav`, `Footer`, `ScrollReveal`, `GalleryClient` (filter +
-  lightbox), `ContactForm`, `PopCard`, `CorridorHero`, `CosmicBand`
+- `components/` : `Nav`, `Footer`, `ScrollReveal`, `GalleryClient` (the
+  filterable grid), `Lightbox` (the work detail dialog, shared by the grid and
+  the ring), `StudioRing` (the turning ring on the home page), `ContactForm`,
+  `PopCard`, `CorridorHero`
 - `components/ui/` : the shadcn-convention folder for dropped-in components.
-  `image-stream-hero` (the corridor) and `blackhole-hero-section` (the ring of
-  fire) live here, unmodified, so they can be updated from source
+  `image-stream-hero` (the corridor) and `project-showcase` live here,
+  unmodified, so they can be updated from source. `circular-gallery` used to
+  sit here and was replaced by `components/StudioRing`: turning it from a
+  scroll-driven ring into one the reader drags and clicks left nothing of the
+  original behaviour to track upstream
 - `content/works.ts` : the collection data. **This is the file Sweta edits to
   manage the gallery**
 - `lib/utils.ts` : the `cn` class-merging helper the ui components import

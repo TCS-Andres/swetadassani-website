@@ -34,6 +34,10 @@ const SLUGS = [
 const STREAM = SLUGS.map((slug) => ({ src: `/art/${slug}.jpg` }));
 const STREAM_SM = SLUGS.map((slug) => ({ src: `/art/xs/${slug}.jpg` }));
 
+/** Cards per rail. Also how many of the crops are worth preloading, since the
+ *  component walks the list in order and never reaches the rest. */
+const BAND_CARDS = 9;
+
 /**
  * The same corridor, sized for a phone and moved out from behind the type.
  *
@@ -56,7 +60,7 @@ function CorridorBand() {
     <ImageStreamHero
       images={STREAM_SM}
       className="corridor-band"
-      cards={9}
+      cards={BAND_CARDS}
       speed={22}
       axis={52}
       aria-hidden
@@ -68,6 +72,22 @@ export default function CorridorHero() {
   const count = works.length;
 
   return (
+    <>
+      {/* The corridor's cards load lazily from inside a 3D transform, so on a
+          phone they arrive one at a time and the ribbon has holes in it for
+          the first few seconds. These preloads put the nine that are actually
+          on the rail in the cache before the cards ask for them, so the tunnel
+          is whole on the first frame. `media` keeps the cost off desktop and
+          tablet, which show the other rail and never request these files. */}
+      {SLUGS.slice(0, BAND_CARDS).map((slug) => (
+        <link
+          key={slug}
+          rel="preload"
+          as="image"
+          href={`/art/xs/${slug}.jpg`}
+          media="(max-width: 620px)"
+        />
+      ))}
     <ImageStreamHero
       images={STREAM}
       className="corridor"
@@ -100,5 +120,6 @@ export default function CorridorHero() {
         {count} originals
       </div>
     </ImageStreamHero>
+    </>
   );
 }

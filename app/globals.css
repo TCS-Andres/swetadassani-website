@@ -429,18 +429,21 @@ a.price:focus-visible{outline:2px solid var(--iris-deep);outline-offset:2px;}
 .cta-band .btn:hover{background:transparent;color:var(--night-text);border-color:var(--night-text);}
 
 /* ==== THE RING ====
-   The section is taller than the screen on purpose; the ring sticks in the
-   middle of it and turns as that height is scrolled. Height is in vh rather
-   than a fixed px so the turn takes about the same number of wheel notches
-   on any display. */
+   The collection on a turning ring, turned by the reader rather than by the
+   scrollbar. Scrolling and turning are separate now, so reading down the page
+   no longer spins the paintings. */
 .ring-track{background:var(--canvas);}
 .ring-travel{position:relative;}
-/* Not sticky. Pinning the page for three screen-heights meant the wheel
-   stopped moving the document and turned the ring instead, which reads as
-   the page having frozen. The ring now sits in a normal-height section and
-   takes its rotation from its own passage through the viewport, so scrolling
-   never stops. */
-.ring-frame{position:relative;height:min(74vh,600px);display:flex;align-items:center;justify-content:center;overflow:hidden;perspective:2200px;}
+/* `pan-y` is what keeps the two gestures from fighting: a sideways drag turns
+   the ring, a vertical one still scrolls the page, and the browser decides
+   which is which without any of it being cancelled in JS. */
+.ring-frame{
+  position:relative;height:min(74vh,600px);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;perspective:2200px;
+  touch-action:pan-y;cursor:grab;
+}
+.ring-frame.dragging{cursor:grabbing;}
 /* These two defaults must match what the component measures, or the ring is
    laid out at one size by the server and snapped to another the moment it
    hydrates, with sixteen cards visibly jumping. The JS derives radius from 46%
@@ -461,7 +464,14 @@ a.price:focus-visible{outline:2px solid var(--iris-deep);outline-offset:2px;}
   margin-left:calc(var(--card-w,240px) / -2);
   margin-top:calc(var(--card-w,240px) * -0.625);
   backface-visibility:hidden;
+  /* A button now, so a painting opens from the ring the same way it opens
+     from the grid. Stripped back to the card it already was. */
+  appearance:none;background:none;border:0;padding:0;font:inherit;color:inherit;
+  cursor:pointer;text-align:inherit;
 }
+.ring-card:focus-visible{outline:2px solid var(--iris-deep);outline-offset:6px;}
+.ring-card figure{transition:transform .45s var(--ease);}
+.ring-card:hover figure{transform:translateY(-6px);}
 /* The white mat again, so a painting on the ring is framed the same way it
    is everywhere else on the site. */
 .ring-card figure{margin:0;background:var(--paper);padding:10px 10px 0;box-shadow:0 24px 44px -28px rgba(38,32,56,.5);}
@@ -471,6 +481,21 @@ a.price:focus-visible{outline:2px solid var(--iris-deep);outline-offset:2px;}
 .ring-card .m{display:block;margin-top:.2rem;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);}
 /* In the flow now, so the clearance is a real margin rather than whatever
    space the overlay happened to leave. */
+/* Under the ring, not over it, so the arrows never sit on a painting. The
+   hint is there because a ring that turns by itself does not otherwise look
+   like something you are allowed to grab. */
+.ring-controls{display:flex;align-items:center;justify-content:center;gap:1.1rem;margin-top:clamp(1.1rem,2.5vh,1.6rem);}
+.ring-nav{
+  width:2.5rem;height:2.5rem;border-radius:50%;
+  border:1px solid var(--line);background:var(--paper);color:var(--ink);
+  font-size:0.95rem;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:border-color .25s ease,color .25s ease,transform .25s ease;
+}
+.ring-nav:hover{border-color:var(--iris-deep);color:var(--iris-deep);}
+.ring-nav:active{transform:scale(.94);}
+.ring-nav:focus-visible{outline:2px solid var(--iris-deep);outline-offset:3px;}
+.ring-hint{font-size:0.6rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--muted);}
 .ring-section{padding-block:clamp(2.5rem,6vh,4.5rem);}
 .ring-head{text-align:center;padding-inline:var(--pad-x);margin-bottom:clamp(2rem,4.5vh,3.25rem);}
 .ring-head .section-title{margin-top:.5rem;}
@@ -481,9 +506,6 @@ a.price:focus-visible{outline:2px solid var(--iris-deep);outline-offset:2px;}
   .ring-frame{height:min(62vh,460px);}
   .ring-stage{height:min(50vh,340px);}
 }
-/* Without the drift the ring still turns, but only as far as the reader
-   scrolls it; nothing moves on its own. */
-
 /* ==== HOVER-PREVIEW LIST (the three energies) ====
    Names on hairlines; point at one and its painting follows the cursor. */
 .showcase{position:relative;}
@@ -882,6 +904,16 @@ html[data-reveal] .reveal.in{opacity:1;transform:none;}
   .corridor-overlay{order:1;min-height:0;height:auto;padding-bottom:clamp(1.75rem,4.5vh,2.5rem);}
   .corridor-overlay::before{display:none;}
   .corridor-band{display:block;order:2;}
+
+  /* The ring, on a phone. Sixteen cards on a ring that fits the screen puts
+     the neighbours closer together than the cards are wide, which is what made
+     them look stacked. Pushing the radius out past the viewport spreads them
+     to roughly one card width apart, so about three are on screen and each has
+     room. These must track the narrow branch of the component's measure(). */
+  .ring-stage{
+    --ring-r:max(300px, 115vw);
+    --card-w:clamp(120px, calc(var(--ring-r) * 0.3044), 190px);
+  }
   .corridor-scroll{order:3;margin-top:clamp(1.5rem,4vh,2.25rem);}
 }
 @media (prefers-reduced-motion:reduce){

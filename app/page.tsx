@@ -4,7 +4,7 @@ import CorridorHero from "@/components/CorridorHero";
 import PopCard from "@/components/PopCard";
 import PlateTilt from "@/components/PlateTilt";
 import ColorRibbons from "@/components/ColorRibbons";
-import { CircularGallery } from "@/components/ui/circular-gallery";
+import StudioRing from "@/components/StudioRing";
 import { ProjectShowcase } from "@/components/ui/project-showcase";
 import { works, featured, ENERGIES } from "@/content/works";
 
@@ -132,14 +132,7 @@ export default function Home() {
           <h2 className="section-title">More from the studio</h2>
         </div>
 
-        <CircularGallery
-          items={works.map((w) => ({
-            slug: w.slug,
-            title: w.title,
-            meta: `${w.size} · ${w.year}`,
-            alt: w.alt,
-          }))}
-        />
+        <StudioRing works={works} />
 
         <div className="ring-foot">
           <Link className="btn" href="/contact">
